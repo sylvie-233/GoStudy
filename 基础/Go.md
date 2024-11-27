@@ -56,6 +56,9 @@ std:
         rune: # int32字符
         slice:
         string:
+        len():
+        make():
+        new():
         panic():
     bufio: # 输入缓冲
         Reader:
@@ -94,6 +97,31 @@ types:
 `var`定义变量、`const`定义常量
 
 `:=`自动类型推断
+
+
+
+#### string
+
+字符串
+
+
+#### pointers
+
+
+指针
+
+`&`、`*ptr`
+
+
+#### array
+
+`[]T`
+
+
+
+#### slice
+
+
 
 
 
