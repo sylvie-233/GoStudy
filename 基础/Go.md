@@ -4,7 +4,9 @@
 
 `package main`声明主模块
 
-`gopath`go模块搜索路径 
+`gopath`：go模块搜索路径
+
+`GOPATH/pkg/mod` :存放下载的第三方包
 
 
 
@@ -17,12 +19,15 @@ go:
     doc:
     env: # go环境变量
     fmt: # 格式化代码
+    get: # 下载包
     help:
     install:
     list: #
     mod: # 模块管理工具
+        edit:
         init: # 初始化模块
         tidy:
+        vendor:
     run: # 运行
     test:
     tool: # go工具链
@@ -51,35 +56,136 @@ std:
     _builtin:
         bool:
         byte: # uint8字节
+        chan:
+            Close():
+        error:
         float32:
-        nil:
+        map:
+            Add():
+            Set():
+        nil: # 空值
         rune: # int32字符
         slice:
         string:
+        append():
+        close():
+        delete(): # 删除键值对
         len():
         make():
         new():
         panic():
+    big:
+        NewInt():
     bufio: # 输入缓冲
         Reader:
             ReadString():
         NewReader():
+    crypto:
+        rand:
+    database:
+        sql:
+            Db:
+                SetMaxOpenConns():
+    encoding:
+        json:
+            _tag:
+                json:
+                    omitempty:
+            Decoder:
+                Decode():
+            Encoder:
+                Encode():
+            Marshal(): # json序列化
+            MarshalIndent():
+            NewDecoder():
+            NewEncoder):
+            Unmarshal(): # json反序列化
+            Valid(): # json格式校验
+    errors:
+        New():
     fmt: # 格式化
         Printf():
-        Println():
+        Println(): # 打印换行
+    io:
+        CopyBuffer():
+        WriteString(): # 写入字符串
+            file:
+            str:
+            ---
+            length:
+    ioutil: # io工具包
+        ReadAll():
+            ---
+            bytes:
+        ReadFile():
+    log:
+        Fatal():
+    math:
+        rand:
+            Intn():
+            Seed():
+    net:
+        http:
+            Request:
+                Body:
+            Response: # 响应对象
+                Body:
+                ContentLength:
+                StatusCode:
+            ResponseWrite:
+                Header():
+                Write():
+            Get(): # get请求
+            ListenAndServe(): # 监听服务
+            PostForm():
+        url:
+            URL:
+                Host:
+                Path:
+                RawQuery:
+                Scheme:
+                Port():
+                Query():
+                String():
+            Values:
+            Parse():
     os:
+        File:
+            Close(): # 关闭文件
         Stdin: # 标准输入
+        Chdir():
+        Create(): # 创建文件File
     strconv: # 字符串转换
+        Itoa():
         ParseFloat():
     strings: # 字符串工具
+        Builder:
+            String():
+            Write(): # 写入
+        Reader:
+
+        NewReader():
         Trim():
+    sync:
+        Mutex: # 互斥锁
+            Lock():
+            Unlock():
+        RWMutex:
+            RLock():
+            RUnlock():
+        WaitGroup: # 等待计数
+            Add(): # 计数+1
+            Done(): # 计数-1
+            Wait(): # 等待
     time: # 时间
         Date:
         Location:
+        Millisecond:
         Month:
-        Time:
+        Time: # 时间
             Format():
-        Now(): 
+        Now(): # 当前时间
+        Sleep():
 ```
 
 
@@ -98,7 +204,7 @@ types:
 
 `:=`自动类型推断
 
-
+`.(T)`：类型断言
 
 #### string
 
@@ -122,25 +228,81 @@ types:
 #### slice
 
 
+#### map
 
+映射：`map[K]V`
 
 
 #### goroutine
+
+go携程
+
+
+#### channel
+
+go通道：`chan T`
 
 
 ### 流程控制
 ```yaml
 :
-    if ... else ...:
+    defer: # 延迟处理
+    for ... range ...: # 迭代遍历
+    go ...: # goroutine
+    if ... else if ... else ...:
+    loop ...:
+        break:
+        continue:
+        goto:
+    switch ... case ... default ...:
+        fallthrough:
 ```
 
 
 
 ### function
 
+```golang
+func myfunc() (int, string) {
+    return ...
+}
+```
+
+
+
 
 
 ### Struct
+
+
+```golang
+type User struct {
+    Name string
+    Age int
+}
+```
+
+结构体
+
+
+
+#### method
+
+方法
+```golang
+func (u *User) myMethod() {
+    ...
+}
+```
+
+#### interface
+
+
+
+
+
+#### tag
+
 
 
 
