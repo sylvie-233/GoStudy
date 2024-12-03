@@ -67,8 +67,8 @@ std:
         rune: # int32字符
         slice:
         string:
-        append():
-        close():
+        append(): # slice追加元素
+        close(): # 关闭chan
         delete(): # 删除键值对
         len():
         make():
@@ -80,6 +80,18 @@ std:
         Reader:
             ReadString():
         NewReader():
+    context:
+        Context:
+            Deadline():
+            Done():
+            Err():
+            Value():
+        Background():
+            Value():
+        \TODO():
+        WithCancel():
+        WithTimeout():
+        WithValue():
     crypto:
         rand:
     database:
@@ -102,6 +114,7 @@ std:
             Unmarshal(): # json反序列化
             Valid(): # json格式校验
     errors:
+        Is():
         New():
     fmt: # 格式化
         Printf():
@@ -135,6 +148,10 @@ std:
             ResponseWrite:
                 Header():
                 Write():
+            Server:
+                Addr:
+                Handler:
+                Shutdown():
             Get(): # get请求
             ListenAndServe(): # 监听服务
             PostForm():
@@ -152,9 +169,13 @@ std:
     os:
         File:
             Close(): # 关闭文件
+        Interrupt:
+        Signal:
         Stdin: # 标准输入
         Chdir():
         Create(): # 创建文件File
+    signal:
+        Notify(): # 监听信号（配合chan）
     strconv: # 字符串转换
         Itoa():
         ParseFloat():
@@ -177,6 +198,8 @@ std:
             Add(): # 计数+1
             Done(): # 计数-1
             Wait(): # 等待
+    testing:
+        T:
     time: # 时间
         Date:
         Location:
@@ -184,6 +207,7 @@ std:
         Month:
         Time: # 时间
             Format():
+        After():
         Now(): # 当前时间
         Sleep():
 ```
@@ -254,6 +278,7 @@ go通道：`chan T`
         break:
         continue:
         goto:
+    select ... case ...: # channel select
     switch ... case ... default ...:
         fallthrough:
 ```
@@ -316,8 +341,16 @@ func (u *User) myMethod() {
 ### 并发
 
 
+#### Context
+
+多级Goroutine实现通信的一种工具，并发安全
+
+Context上下文树
 
 
+### 测试
+
+`testing`
 
 
 

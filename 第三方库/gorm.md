@@ -9,9 +9,8 @@ orm框架
 ```yaml
 gorm:
     _tags:
-        binding:
-            require:
         gorm:
+            default:
             unique:  
     Config: # 配置项
     Db: # 数据库
