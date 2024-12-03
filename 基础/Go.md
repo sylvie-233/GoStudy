@@ -174,7 +174,41 @@ std:
         Stdin: # 标准输入
         Chdir():
         Create(): # 创建文件File
-    signal:
+    reflect: # 反射
+        Float32:
+        Int32:
+        Method: # 方法
+            Name():
+            Call():
+            Type():
+        rtype:
+        StructField: # 字段结构
+            Name:
+            Tag:
+                Get():
+            Type:
+        Type: # 类型
+            Field(): # 根据index获取字段
+            FieldByName(): # 根据名称查找字段
+            Kind(): # 类型种类
+            Method(): # 根据index获取方法
+            MethodByName():
+            Name(): # 类型名
+            NumField(): # 字段个数
+            NumMethod():
+        Value: # 值
+            Elem(): # 根据指针取值
+            FieldByName():
+            Float():
+            Int():
+            IsNil():
+            Kind():
+            MapIndex():
+            MethodByName():
+            SetInt():
+        TypeOf():
+        ValueOf():
+    signal: # 信号
         Notify(): # 监听信号（配合chan）
     strconv: # 字符串转换
         Itoa():
@@ -329,8 +363,9 @@ func (u *User) myMethod() {
 #### tag
 
 
+#### reflect
 
-
+反射
 
 ### module
 
