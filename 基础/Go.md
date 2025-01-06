@@ -1,5 +1,8 @@
 # Go
 
+`go官方文档：https://golang.google.cn/doc/`
+
+
 ## 基础介绍
 
 `package main`声明主模块
@@ -246,6 +249,9 @@ std:
         After():
         Now(): # 当前时间
         Sleep():
+x:
+    crypto:
+        bcrypt:
 ```
 
 
