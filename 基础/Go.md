@@ -120,6 +120,7 @@ std:
         Printf():
         Println(): # 打印换行
     io:
+        Copy():
         CopyBuffer():
         WriteString(): # 写入字符串
             file:
@@ -152,6 +153,7 @@ std:
                 Addr:
                 Handler:
                 Shutdown():
+            StatusOK:
             Get(): # get请求
             ListenAndServe(): # 监听服务
             PostForm():

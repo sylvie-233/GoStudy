@@ -11,15 +11,16 @@ gorm:
     _tags:
         gorm:
             default:
+            primaryKey:
             unique:  
     Config: # 配置项
     Db: # 数据库
         Error:
         RowsAffected:
-        AutoMigrate(): # 自动迁移
+        AutoMigrate(): # 自动迁移（传入模型类）
         Create(): # 创建记录
         Db(): # 返回sql.Db对象
-        Find():
+        Find(): # 查询
         First():
         Where():
     Model: # 模型
