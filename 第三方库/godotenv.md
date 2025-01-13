@@ -1,13 +1,9 @@
-# viper
-
+# GoDotEnv
 
 ## 基础介绍
 
-go配置管理库
-
+go .env文件管理
 
 ## 核心内容
 ```yaml
-viper:
-    
 ```
