@@ -41,7 +41,7 @@ go:
 go命令行
 
 
-### go.mod
+#### go.mod
 ```yaml
 go.mod:
     module: # 模块声明
@@ -77,12 +77,24 @@ std:
         make():
         new():
         panic():
+    archive:
+        tar:
+        zip:
     big:
         NewInt():
     bufio: # 输入缓冲
         Reader:
             ReadString():
         NewReader():
+    bytes:
+    cmp:
+    compress:
+        gzip:
+        zlib:
+    container:
+        heap:
+        list:
+        ring:
     context:
         Context:
             Deadline():
@@ -96,12 +108,23 @@ std:
         WithTimeout():
         WithValue():
     crypto:
+        aes:
+        des:
+        md5:
         rand:
     database:
         sql:
+            driver:
             Db:
                 SetMaxOpenConns():
+    debug:
+        buildinfo:
+        elf:
+        pe:
     encoding:
+        base64:
+        csv:
+        hex:
         json:
             _tag:
                 json:
@@ -116,13 +139,36 @@ std:
             NewEncoder):
             Unmarshal(): # json反序列化
             Valid(): # json格式校验
+        xml:
     errors:
         Is():
         New():
     fmt: # 格式化
         Printf():
         Println(): # 打印换行
+    go:
+        ast:
+        build:
+        doc:
+        format:
+        parser:
+        types:
+    hash:
+    html:
+        template:
+    image:
+        color:
+        draw:
+        gif:
+        jpeg:
+        png:
     io:
+        fs:
+        ioutil: # io工具包
+            ReadAll():
+                ---
+                bytes:
+            ReadFile():
         Copy():
         CopyBuffer():
         WriteString(): # 写入字符串
@@ -130,17 +176,15 @@ std:
             str:
             ---
             length:
-    ioutil: # io工具包
-        ReadAll():
-            ---
-            bytes:
-        ReadFile():
+    iter:
     log:
         Fatal():
+    maps:
     math:
         rand:
             Intn():
             Seed():
+    mime:
     net:
         http:
             Request:
@@ -179,6 +223,8 @@ std:
         Stdin: # 标准输入
         Chdir():
         Create(): # 创建文件File
+    path:
+    plugin:
     reflect: # 反射
         Float32:
         Int32:
@@ -213,8 +259,12 @@ std:
             SetInt():
         TypeOf():
         ValueOf():
+    regexp:
+    runtime:
     signal: # 信号
         Notify(): # 监听信号（配合chan）
+    slices:
+    sort:
     strconv: # 字符串转换
         Itoa():
         ParseFloat():
@@ -226,7 +276,9 @@ std:
 
         NewReader():
         Trim():
+    structs:
     sync:
+        atomic:
         Mutex: # 互斥锁
             Lock():
             Unlock():
@@ -237,8 +289,10 @@ std:
             Add(): # 计数+1
             Done(): # 计数-1
             Wait(): # 等待
+    syscall:
     testing:
         T:
+    text:
     time: # 时间
         Date:
         Location:
@@ -249,6 +303,7 @@ std:
         After():
         Now(): # 当前时间
         Sleep():
+    unsafe:
 x:
     crypto:
         bcrypt:
