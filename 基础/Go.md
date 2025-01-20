@@ -1,6 +1,7 @@
 # Go
 
 `go官方文档：https://golang.google.cn/doc/`
+`8小时转职Golang工程师: P1`
 
 
 ## 基础介绍
@@ -14,6 +15,36 @@
 
 
 
+### 安装目录
+```yaml
+安装目录:
+    /api:
+    /bin:
+        go.exe: # go运行文件
+        gofmt.exe:
+    /doc:
+    /lib:
+    /misc:
+    /pkg:
+        /cache: # 第三方包安装缓存
+        /include:
+        /mod: # 第三方包安装目录 
+        /sumdb:
+        /tool:
+            /windows_amd64:
+                asm.exe:
+                compile.exe:
+                objdump.exe:
+                pack.exe:
+                pprof.exe:
+    /src:
+    /test: # go 测试用例
+    go.env:
+```
+
+
+
+
 ### go
 ```yaml
 go:
@@ -21,10 +52,20 @@ go:
     clean:
     doc:
     env: # go环境变量
+        GO111MODULE:
+        GOCACHE:
+        GOENV:
+        GOMODCACHE:
+        GOPATH:
+        GOPROXY:
+        GOROOT:
+        GOVERSION:
+        GOMOD:
+        GOWORK:
     fmt: # 格式化代码
     get: # 下载包
     help:
-    install:
+    install: # 本地安装包（本地发布）
     list: #
     mod: # 模块管理工具
         edit:
