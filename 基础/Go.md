@@ -1,12 +1,17 @@
 # Go
 
 `go官方文档：https://golang.google.cn/doc/`
-`8小时转职Golang工程师: P1`
+`8小时转职Golang工程师: P26`
 
 
 ## 基础介绍
 
-`package main`声明主模块
+`package main`声明主模块（主运行模块）
+
+
+
+
+
 
 `gopath`：go模块搜索路径
 
@@ -56,9 +61,10 @@ go:
         GOCACHE:
         GOENV:
         GOMODCACHE:
-        GOPATH:
+        GOPATH: # go项目默认路径（包路径）
         GOPROXY:
-        GOROOT:
+        GOROOT: # go安装根目录
+        GOTOOLDIR: # go工具链目录
         GOVERSION:
         GOMOD:
         GOWORK:
@@ -104,6 +110,8 @@ std:
             Close():
         error:
         float32:
+        int:
+        int64:
         map:
             Add():
             Set():
@@ -112,10 +120,11 @@ std:
         slice:
         string:
         append(): # slice追加元素
+        cap(): # 数组容量
         close(): # 关闭chan
         delete(): # 删除键值对
-        len():
-        make():
+        len(): # 数组长度
+        make(): # 开辟内存（slice、）
         new():
         panic():
     archive:
@@ -144,7 +153,7 @@ std:
             Value():
         Background():
             Value():
-        \TODO():
+        TODO():
         WithCancel():
         WithTimeout():
         WithValue():
@@ -186,6 +195,7 @@ std:
         New():
     fmt: # 格式化
         Printf():
+            %T: # 数据类型
         Println(): # 打印换行
     go:
         ast:
@@ -269,16 +279,17 @@ std:
     reflect: # 反射
         Float32:
         Int32:
-        Method: # 方法
-            Name():
+        Method: # 字段方法
+            Name:
+            Type:
             Call():
-            Type():
         rtype:
         StructField: # 字段结构
             Name:
             Tag:
                 Get():
             Type:
+            Interface(): # 字段值
         Type: # 类型
             Field(): # 根据index获取字段
             FieldByName(): # 根据名称查找字段
@@ -343,7 +354,7 @@ std:
             Format():
         After():
         Now(): # 当前时间
-        Sleep():
+        Sleep(): # 进程睡眠
     unsafe:
 x:
     crypto:
@@ -357,16 +368,27 @@ x:
 ```yaml
 types:
     bool:
+    fload64:
+    int:
     int64:
+    nil:
     string:
     uint64:
 ```
 
 `var`定义变量、`const`定义常量
 
-`:=`自动类型推断
+`:=`自动类型推断声明（不能声明全局变量）
 
 `.(T)`：类型断言
+
+`const itoa`：定义常量枚举（0开始）
+
+
+
+
+
+
 
 #### string
 
@@ -381,18 +403,34 @@ types:
 `&`、`*ptr`
 
 
+
+
+
+
 #### array
 
 `[]T`
 
-
+值传递
 
 #### slice
+
+切片、动态数组
+
+引用传递
+
+默认长度、容量为0，没有开辟空间
+
+切片截取：左闭右开
 
 
 #### map
 
 映射：`map[K]V`
+
+引用传递
+
+默认长度、容量为0，没有开辟空间(nil)
 
 
 #### goroutine
@@ -408,7 +446,7 @@ go通道：`chan T`
 ### 流程控制
 ```yaml
 :
-    defer: # 延迟处理
+    defer: # 延迟处理（在return之后）
     for ... range ...: # 迭代遍历
     go ...: # goroutine
     if ... else if ... else ...:
@@ -447,6 +485,8 @@ type User struct {
 
 结构体
 
+值传递
+
 
 
 #### method
@@ -458,9 +498,30 @@ func (u *User) myMethod() {
 }
 ```
 
+#### extends
+
+通过匿名字段组合实现继承
+
+
+
+
 #### interface
+```go
+type Animal interface {
+    myFunc() string
+}
+```
 
 
+用于实现多态
+
+隐式接口实现
+
+接口没有实体、用指针接收
+接口指针持有真实类型的引用
+
+
+万能接口：`interface{}`
 
 
 
@@ -473,9 +534,20 @@ func (u *User) myMethod() {
 
 反射
 
+Type、Value
+
+
+
+
+
+
+
+
 ### module
 
+公共访问：首字母大写
 
+`init()`：包初始化函数
 
 
 
