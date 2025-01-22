@@ -1,7 +1,7 @@
 # Go
 
 `go官方文档：https://golang.google.cn/doc/`
-`8小时转职Golang工程师: P26`
+``
 
 
 ## 基础介绍
@@ -13,7 +13,7 @@
 
 
 
-`gopath`：go模块搜索路径
+`GOPATH`：go模块搜索路径
 
 `GOPATH/pkg/mod` :存放下载的第三方包
 
@@ -57,12 +57,13 @@ go:
     clean:
     doc:
     env: # go环境变量
-        GO111MODULE:
+        -w: # 修改环境变量
+        GO111MODULE: # 模块功能go.mod
         GOCACHE:
         GOENV:
         GOMODCACHE:
         GOPATH: # go项目默认路径（包路径）
-        GOPROXY:
+        GOPROXY: # Go模块代理
         GOROOT: # go安装根目录
         GOTOOLDIR: # go工具链目录
         GOVERSION:
@@ -74,10 +75,15 @@ go:
     install: # 本地安装包（本地发布）
     list: #
     mod: # 模块管理工具
-        edit:
+        download: # 下载依赖
+        edit: # 编辑go.mod
+            -replace:
+        graph: # 查看依赖结构
         init: # 初始化模块
-        tidy:
-        vendor:
+        tidy: # 清理依赖
+        vendor: # 导出所有依赖到vendor目录
+        verify: # 校验模块
+        why:
     run: # 运行
     test:
     tool: # go工具链
@@ -91,8 +97,10 @@ go命令行
 #### go.mod
 ```yaml
 go.mod:
-    module: # 模块声明
     go: # 指定go版本
+    module: # 模块声明
+    replace: # 项目包依赖替换
+    require: # 项目依赖包
 ```
 
 模块配置文件
@@ -130,8 +138,6 @@ std:
     archive:
         tar:
         zip:
-    big:
-        NewInt():
     bufio: # 输入缓冲
         Reader:
             ReadString():
@@ -193,10 +199,16 @@ std:
     errors:
         Is():
         New():
+    flag: # 命令行解析
+        IntVar():
+        Parse(): # 参数解析
+        StringVar(): # 参数绑定
     fmt: # 格式化
         Printf():
             %T: # 数据类型
         Println(): # 打印换行
+        Scanln(): # 输入一行
+        Sprintf(): # 格式化字符串
     go:
         ast:
         build:
@@ -220,7 +232,7 @@ std:
                 ---
                 bytes:
             ReadFile():
-        Copy():
+        Copy(): # 复制
         CopyBuffer():
         WriteString(): # 写入字符串
             file:
@@ -232,6 +244,8 @@ std:
         Fatal():
     maps:
     math:
+        big:
+        complx:
         rand:
             Intn():
             Seed():
@@ -255,6 +269,11 @@ std:
             Get(): # get请求
             ListenAndServe(): # 监听服务
             PostForm():
+        mail:
+        netip:
+        rpc:
+        smtp:
+        textproto:
         url:
             URL:
                 Host:
@@ -266,15 +285,30 @@ std:
                 String():
             Values:
             Parse():
+        Conn:
+            Close():
+            Read():
+            RemoteAddr():
+            Write():
+        Listener:
+            Accept():
+            Close():
+        Dial(): # socket连接
+        Listen(): # socket监听
     os:
+        exec:
+        signal:
+        user:
         File:
             Close(): # 关闭文件
         Interrupt:
         Signal:
         Stdin: # 标准输入
+        Stdout: # 标准输出
         Chdir():
         Create(): # 创建文件File
     path:
+        filepath:
     plugin:
     reflect: # 反射
         Float32:
@@ -312,7 +346,16 @@ std:
         TypeOf():
         ValueOf():
     regexp:
+        syntax:
     runtime:
+        cgo:
+        coverage:
+        debug:
+        metrics:
+        pprof:
+        race:
+        trace:
+        Goexit(): # 退出goroutine
     signal: # 信号
         Notify(): # 监听信号（配合chan）
     slices:
@@ -334,7 +377,7 @@ std:
         Mutex: # 互斥锁
             Lock():
             Unlock():
-        RWMutex:
+        RWMutex: # 读写锁
             RLock():
             RUnlock():
         WaitGroup: # 等待计数
@@ -342,9 +385,18 @@ std:
             Done(): # 计数-1
             Wait(): # 等待
     syscall:
+        js:
     testing:
+        fstest:
+        iotest:
+        quick:
+        slogtest:
         T:
     text:
+        scanner:
+        tabwriter:
+        template:
+            parse:
     time: # 时间
         Date:
         Location:
@@ -355,10 +407,8 @@ std:
         After():
         Now(): # 当前时间
         Sleep(): # 进程睡眠
+    unique:
     unsafe:
-x:
-    crypto:
-        bcrypt:
 ```
 
 
@@ -435,12 +485,25 @@ types:
 
 #### goroutine
 
-go携程
+go协程
+
+main主协程退出，程序结束运行
 
 
 #### channel
 
+- `chan T`
+- `chan`
+- `chan`
+
 go通道：`chan T`
+
+go协程通信
+
+通道默认无缓存
+
+for...range.. 遍历channel
+select 多路复用channel
 
 
 ### 流程控制
@@ -552,6 +615,14 @@ Type、Value
 
 
 ### 并发
+
+
+#### GMP
+
+- G：协程
+- P：协程调度器（本地队列、全局队列）
+- M：线程
+
 
 
 #### Context
