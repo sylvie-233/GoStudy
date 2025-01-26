@@ -1,7 +1,7 @@
 # Go
 
 `go官方文档：https://golang.google.cn/doc/`
-``
+`2022go标准库教程：P21`
 
 
 ## 基础介绍
@@ -85,7 +85,7 @@ go:
         verify: # 校验模块
         why:
     run: # 运行
-    test:
+    test: # 运行测试用例
     tool: # go工具链
     version: # go版本
 
@@ -133,8 +133,9 @@ std:
         delete(): # 删除键值对
         len(): # 数组长度
         make(): # 开辟内存（slice、）
-        new():
-        panic():
+        new(): # 开辟内存（无初始化）
+        panic(): # 抛出异常
+        print(): # 控制台输出
     archive:
         tar:
         zip:
@@ -142,7 +143,7 @@ std:
         Reader:
             ReadString():
         NewReader():
-    bytes:
+    bytes: # 字节切片
     cmp:
     compress:
         gzip:
@@ -197,18 +198,45 @@ std:
             Valid(): # json格式校验
         xml:
     errors:
+        error:
+            Error():
         Is():
-        New():
+        New(): # 新建错误
     flag: # 命令行解析
         IntVar():
         Parse(): # 参数解析
         StringVar(): # 参数绑定
     fmt: # 格式化
+        Errorf(): # 异常格式化
+        Fprint(): # 文件内容写入
+        Fprintf():
+        Fprintln():
+        Fscan():
+        Fscanf():
+        Fscanln():
+        Print():
         Printf():
+            %b: # 二进制
+            %d: # 十进制数字
+            %e: # 科学计数法
+            %f: # 浮点数
+            %s: # 字符串
+            %t: # 布尔字面量
+            %v: # 输出值
+                %+v: # 结构体输出字段
+                %#v: # 结构体带包名输出字段
+            %x: # 十六进制
             %T: # 数据类型
+                width.precision: # 宽度.精度
+                -: # 左对齐
+                0: # 0填充
         Println(): # 打印换行
+        Scan():
+        Scanf():
         Scanln(): # 输入一行
+        Sprint():
         Sprintf(): # 格式化字符串
+        Sprintln():
     go:
         ast:
         build:
@@ -232,6 +260,9 @@ std:
                 ---
                 bytes:
             ReadFile():
+        EOF:
+        Reader:
+        Writer:
         Copy(): # 复制
         CopyBuffer():
         WriteString(): # 写入字符串
@@ -240,8 +271,22 @@ std:
             ---
             length:
     iter:
-    log:
+    log: # 日志
+        Logger:
+            Fatal():
+            Panic():
+            Print():
         Fatal():
+        Flags(): # 日志配置
+        New(): # 新建日志器
+        Panic():
+        Prefix(): # 日志信息前缀
+        Print():
+        Printf():
+        Println():
+        SetFlags():
+        SetOutput(): # 设置日志输出
+        SetPrefix():
     maps:
     math:
         big:
@@ -299,16 +344,74 @@ std:
         exec:
         signal:
         user:
-        File:
+        Args: # 命令行参数
+        DirEntry:
+        File: # 文件对象
             Close(): # 关闭文件
+            Read():
+            ReadAt():
+            Seek():
+            Stat(): # 文件信息
+            Write():
+            WriteAt():
+            WriteString():
+        FileInfo: # 文件信息对象
+            IsDir():
+            Mode():
+            ModTime():
+            Name():
+            Size():
+            Sys():
         Interrupt:
+        Kill: # 进程结束信号
+        PathError:
+        ProcAttr: # 进程属性
+            Env:
+            Files:
+        Process: # 进程对象
+            Pid:
+            Signal(): # 进程发送信号
+            Wait(): # 进程等待（阻塞当前进程）
+        O_APPEND:
+        O_CREATE:
+        O_RDWR:
+        O_TRUNC:
+        O_WRONLY:
         Signal:
         Stdin: # 标准输入
         Stdout: # 标准输出
-        Chdir():
+        Chdir(): # 修改工作目录
+        Chmod():
+        Chown():
+        Clearenv(): # 清空环境变量
         Create(): # 创建文件File
+        Environ(): # 获取所有环境变量
+        Executable(): # 获取可执行文件路径
+        Exit(): # 进程结束
+        FileMode(): # 文件权限
+        FindProcess(): 
+        Getenv(): # 获取环境变量
+        Getgid():
+        Getpid(): # 获取进程id
+        Getppid():
+        Getuid():
+        Getwd(): # 获取当前工作目录
+        Hostname(): # 主机名
+        Mkdir(): # 创建单个目录
+        MkdirAll():
+        Open(): # 打开文件
+        OpenFile():
+        ReadDir(): # 读取目录
+        Remove():
+        RemoveAll():
+        Rename():
+        Setenv(): # 设置环境变量
+        StartProcess(): # 开启子进程
+        TempDir():
     path:
         filepath:
+            Abs(): # 获取绝对路径
+            Join(): # 路径合并
     plugin:
     reflect: # 反射
         Float32:
@@ -357,7 +460,7 @@ std:
         trace:
         Goexit(): # 退出goroutine
     signal: # 信号
-        Notify(): # 监听信号（配合chan）
+        Notify(): # 信号监听（配合chan）
     slices:
     sort:
     strconv: # 字符串转换
@@ -368,8 +471,7 @@ std:
             String():
             Write(): # 写入
         Reader:
-
-        NewReader():
+        NewReader(): # 生成Reader
         Trim():
     structs:
     sync:
@@ -384,9 +486,11 @@ std:
             Add(): # 计数+1
             Done(): # 计数-1
             Wait(): # 等待
-    syscall:
+    syscall: # 系统调用
         js:
-    testing:
+        SIGINT:
+        SIGKILL:
+    testing: # 测试
         fstest:
         iotest:
         quick:
@@ -398,15 +502,31 @@ std:
         template:
             parse:
     time: # 时间
-        Date:
-        Location:
+        Date: # 日期
+        Duration: # 时间间隔
+        Location: # 时区
         Millisecond:
         Month:
+        Second: # 秒
         Time: # 时间
-            Format():
-        After():
+            Add():
+            After():
+            Before():
+            Equal():
+            Format(): # 时间字符串格式化
+            Sub():
+            Unix():
+            Year():
+        AfterFunc(): # 延迟执行
+        LoadLocation(): # 
+        NewTicker():
+        NewTimer():
         Now(): # 当前时间
+        Parse(): # 时间字符串解析(Time): 2006-01-02 15:04:05
+        ParseInLocation():
         Sleep(): # 进程睡眠
+        Tick(): # 定时器(chan)
+        Unix():
     unique:
     unsafe:
 ```
@@ -418,7 +538,8 @@ std:
 ```yaml
 types:
     bool:
-    fload64:
+    byte: # 字节
+    fload64: # 浮点数默认
     int:
     int64:
     nil:
@@ -608,6 +729,8 @@ Type、Value
 
 ### module
 
+package定义包、主执行包`main`
+
 公共访问：首字母大写
 
 `init()`：包初始化函数
@@ -632,9 +755,11 @@ Type、Value
 Context上下文树
 
 
-### 测试
+### Test
 
 `testing`
+
+`_test.go`测试文件、大驼峰命名测试函数`testing.T`
 
 
 
