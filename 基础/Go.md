@@ -1,7 +1,7 @@
 # Go
 
 `go官方文档：https://golang.google.cn/doc/`
-`2022go标准库教程：P21`
+``
 
 
 ## 基础介绍
@@ -132,18 +132,86 @@ std:
         close(): # 关闭chan
         delete(): # 删除键值对
         len(): # 数组长度
-        make(): # 开辟内存（slice、）
-        new(): # 开辟内存（无初始化）
+        make(): # 开辟内存（slice、map、channel）（返回引用）
+        new(): # 开辟内存（返回指针）
         panic(): # 抛出异常
         print(): # 控制台输出
+        recover():
     archive:
         tar:
         zip:
     bufio: # 输入缓冲
         Reader:
+            Read():
+            ReadLine():
             ReadString():
+            Reset():
+            UnreadByte():
+        ReadWriter:
+        Scanner:
+            Err():
+            Scan():
+            Split():
+            Text():
+        ScanBytes:
+        ScanRunes:
+        ScanWords:
+        SplitFunc:
+        Writer:
+            Available():
+            Buffered():
+            Flush():
+            ReadFrom():
+            Reset():
+            Write():
+            WriteString():
         NewReader():
+        NewWriter():
+        Peek(): 
     bytes: # 字节切片
+        Buffer:
+            Bytes():
+            Len():
+            NextA():
+            Read():
+            ReadByte():
+            ReadBytes():
+            ReadFrom():
+            ReadString():
+            Reset():
+            String():
+            Write():
+            WriteByte():
+            WriteRune():
+            WriteString():
+            WriteTo():
+        Reader:
+            Len():
+            Read():
+            ReadAt():
+            ReadByte():
+            Seek():
+            Size():
+        Compare():
+        Contains():
+        ContainsRune():
+        Count():
+        Equal():
+        Fields(): # 同Split
+        Index():
+        IndexFunc():
+        Join():
+        Map():
+        NewBuffer():
+        NewBufferString():
+        NewReader():
+        Repeat():
+        Replace():
+        Runes():
+        Split():
+        ToUpper():
+        Trim():
+        TrimFunc():
     cmp:
     compress:
         gzip:
@@ -155,15 +223,16 @@ std:
     context:
         Context:
             Deadline():
-            Done():
+            Done(): # 上下文结束channel
             Err():
             Value():
         Background():
             Value():
         TODO():
-        WithCancel():
+        WithCancel(): # 上下文结束函数
+        WithDeadline():
         WithTimeout():
-        WithValue():
+        WithValue(): # 设置context kv
     crypto:
         aes:
         des:
@@ -203,8 +272,13 @@ std:
         Is():
         New(): # 新建错误
     flag: # 命令行解析
+        Args*(L)
+        Int():
         IntVar():
+        NArg():
+        NFlag():
         Parse(): # 参数解析
+        String():
         StringVar(): # 参数绑定
     fmt: # 格式化
         Errorf(): # 异常格式化
@@ -260,16 +334,50 @@ std:
                 ---
                 bytes:
             ReadFile():
+        Closer:
+            Close():
         EOF:
+        LimitedReader:
+            N:
+            R:
+        PipeReader:
         Reader:
+            Read():
+        ReaderFrom():
+            ReadFrom():
+        ReadWriter:
+            Reader:
+            Writer:
+        SectionReader:
+            Size():
+        Seeker:
+            Seek():
         Writer:
+            Write():
         Copy(): # 复制
         CopyBuffer():
+        CopyN():
+        LimitReader():
+        MultiReader():
+        MultiWriter():
+        NewSectionReader():
+        Pipe():
+        ReadAll():
+        ReadAtLeast():
+        ReadFull():
         WriteString(): # 写入字符串
             file:
             str:
             ---
             length:
+    ioutil:
+        NopCloser():
+        ReadAll():
+        ReadDir():
+        ReadFile():
+        TempDir():
+        TempFile():
+        WriteFile():
     iter:
     log: # 日志
         Logger:
@@ -292,8 +400,23 @@ std:
         big:
         complx:
         rand:
+            Int():
             Intn():
             Seed():
+        MaxInt32:
+        Pi:
+        Abs():
+        Cbrt():
+        Ceil():
+        Dim():
+        Floor():
+        IsNaN():
+        Max():
+        Min():
+        Mod():
+        Pow():
+        Sqrt():
+        Trunc():
     mime:
     net:
         http:
@@ -459,10 +582,26 @@ std:
         race:
         trace:
         Goexit(): # 退出goroutine
+        GOMAXPROCS():
+        Gosched(): # 让出时间片
+        NumCPU():
     signal: # 信号
         Notify(): # 信号监听（配合chan）
     slices:
     sort:
+        Interface:
+            Len():
+            Less():
+            Swap():
+        StringSlice:
+        Float64s():
+        Ints():
+        IsSorted():
+        Reverse():
+        Search(): # 查找
+        SearchInts():
+        Sort():
+        Strings():
     strconv: # 字符串转换
         Itoa():
         ParseFloat():
@@ -604,13 +743,6 @@ types:
 默认长度、容量为0，没有开辟空间(nil)
 
 
-#### goroutine
-
-go协程
-
-main主协程退出，程序结束运行
-
-
 #### channel
 
 - `chan T`
@@ -640,7 +772,7 @@ select 多路复用channel
         goto:
     select ... case ...: # channel select
     switch ... case ... default ...:
-        fallthrough:
+        fallthrough: # 默认不穿透
 ```
 
 
@@ -739,6 +871,11 @@ package定义包、主执行包`main`
 
 ### 并发
 
+#### Goroutine
+
+go协程
+
+main主协程退出，程序结束运行
 
 #### GMP
 
