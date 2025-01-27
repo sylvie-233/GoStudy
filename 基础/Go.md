@@ -243,6 +243,7 @@ std:
             driver:
             Db:
                 SetMaxOpenConns():
+            Named(): # sql具名参数
     debug:
         buildinfo:
         elf:
