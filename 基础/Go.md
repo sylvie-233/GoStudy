@@ -706,6 +706,8 @@ types:
 
 字符串
 
+值传递
+
 
 #### pointers
 
@@ -713,6 +715,8 @@ types:
 指针
 
 `&`、`*ptr`
+
+值传递
 
 
 
@@ -724,6 +728,7 @@ types:
 `[]T`
 
 值传递
+
 
 #### slice
 
@@ -753,6 +758,8 @@ types:
 
 go通道：`chan T`
 
+引用传递
+
 go协程通信
 
 通道默认无缓存
@@ -778,6 +785,11 @@ select 多路复用channel
 ```
 
 
+#### 异常处理
+
+panic()、recovery():
+
+
 
 ### function
 
@@ -787,6 +799,8 @@ func myfunc() (int, string) {
 }
 ```
 
+
+#### 闭包
 
 
 
