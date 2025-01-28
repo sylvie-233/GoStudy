@@ -54,6 +54,7 @@
 ```yaml
 go:
     build:
+        -tags:
     clean:
     doc:
     env: # go环境变量
