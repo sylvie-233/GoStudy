@@ -1,6 +1,6 @@
 # gorm
 
-`枫枫知道gorm教程：P15`
+``
 
 ## 基础介绍
 
@@ -20,6 +20,9 @@ gorm:
             embedded: # 嵌套字段
             embeddedPrefix:
             foreignKey: # 外键
+            joinForeignKey:
+            joinReferences:
+            many2many: # 多对多关联
             not null:
             primaryKey:
             references: # 外键引用字段
@@ -48,6 +51,8 @@ gorm:
         RowsAffected:
         Association(): # 关联模型
             Append(): # 关联模型添加
+            Delete(): # 关联模型删除
+            Replace():
         AutoMigrate(): # 自动迁移（传入模型类）
         Create(): # 创建模型（接收Model指针）
             Error:
@@ -60,11 +65,13 @@ gorm:
         First(): # 第一条记录（id排序）
         Last():
         Model(): # 指定操作模型
+        Preload(): # 预加载
         Raw(): # 执行原生SQL
         Save(): # 更新模型
         Scan():
         Scope(): # 引用SQL片段
         Session(): # 创建Session
+        SetupJoinTable(): # 多对多查询手动设置中间表
         Table():
         Take(): # 查询一条记录
         Update(): # 更新模型
@@ -81,10 +88,16 @@ gorm:
     ErrRecordNotFound:
     Model: # 模型基类
         BeforeCreate(): # Hook 
+        MarshalJSON():
+        Scan():
+        String():
+        Value():
     Open(): # 连接数据库、获取Db实例
 mysql:
     Open():
 ```
+
+
 ### Model
 
 数据库模型
@@ -100,8 +113,16 @@ mysql:
 
 默认关联外键字段：`XXXId`
 
+SetupJoinTable
+
+Preload、Association
+
+
 
 #### 一对一
+
+
+
 
 
 #### 一对多
@@ -115,6 +136,7 @@ mysql:
 
 #### 多对多
 
+joinForeignKey、joinReferences、many2many
 
 
 
