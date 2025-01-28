@@ -16,10 +16,11 @@ gin:
         DefaultPostForm():
         FormFile(): # 获取表单文件
         FullPath():
+        Get(): # 获取kv键值对 
         GetHeader(): # 获取请求头
         JSON(): # JSON响应
         MultipartForm():
-        Next(): # 请求下放
+        Next(): # 中间件请求下放
         Param(): # path params
         PostForm(): # form body params
         Query(): # query params
@@ -76,6 +77,10 @@ gin:
 
 
 
+### 模板引擎
+
+
+
 
 ### 配置文件
 
@@ -92,7 +97,7 @@ gin:
 
 
 
-### 常用工具箱
+### 常用工具
 
 #### 加密
 
