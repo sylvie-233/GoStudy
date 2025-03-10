@@ -1,2 +1,2 @@
 # GoStudy
-Sylvie233的Go语言学习之路~~~
+Sylvie233的Go技术栈
