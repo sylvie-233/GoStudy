@@ -675,7 +675,7 @@ std:
 
 
 
-### 数据类型
+### Data Types
 ```yaml
 types:
     bool:
@@ -702,14 +702,14 @@ types:
 
 
 
-#### string
+#### String
 
 字符串
 
 值传递
 
 
-#### pointers
+#### Pointers
 
 
 指针
@@ -723,14 +723,14 @@ types:
 
 
 
-#### array
+#### Array
 
 `[]T`
 
 值传递
 
 
-#### slice
+#### Slice
 
 切片、动态数组
 
@@ -741,7 +741,7 @@ types:
 切片截取：左闭右开
 
 
-#### map
+#### Map
 
 映射：`map[K]V`
 
@@ -750,7 +750,7 @@ types:
 默认长度、容量为0，没有开辟空间(nil)
 
 
-#### channel
+#### Channel
 
 - `chan T`
 - `chan`
@@ -768,7 +768,7 @@ for...range.. 遍历channel
 select 多路复用channel
 
 
-### 流程控制
+### Control Flow
 ```yaml
 :
     defer: # 延迟处理（在return之后）
@@ -785,14 +785,13 @@ select 多路复用channel
 ```
 
 
-#### 异常处理
+#### Exception Handler
 
 panic()、recovery():
 
 
 
-### function
-
+### Function
 ```golang
 func myfunc() (int, string) {
     return ...
@@ -800,7 +799,6 @@ func myfunc() (int, string) {
 ```
 
 
-#### 闭包
 
 
 
@@ -821,7 +819,7 @@ type User struct {
 
 
 
-#### method
+#### Method
 
 方法
 ```golang
@@ -830,14 +828,14 @@ func (u *User) myMethod() {
 }
 ```
 
-#### extends
+#### Extends
 
 通过匿名字段组合实现继承
 
 
 
 
-#### interface
+#### Interface
 ```go
 type Animal interface {
     myFunc() string
@@ -857,12 +855,12 @@ type Animal interface {
 
 
 
-#### tag
+#### Tag
 
 
 
 
-#### reflect
+#### Reflect
 
 反射
 
@@ -885,7 +883,7 @@ package定义包、主执行包`main`
 
 
 
-### 并发
+### Concurrent
 
 #### Goroutine
 
