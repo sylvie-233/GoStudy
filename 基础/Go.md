@@ -11,14 +11,15 @@
 
 
 
+`GOPROXY`: 模块代理
+`GOMODCACHE`: 第三方模块安装
 
 
-`GOPATH`：go模块搜索路径
-
-`GOPATH/pkg/mod` :存放下载的第三方包
-
+`GOPATH`: go模块搜索路径
+`GOPATH/pkg/mod`: 存放下载的第三方包
 
 
+mingw安装：`https://sourceforge.net/projects/mingw/`
 
 ### 安装目录
 ```yaml
@@ -53,6 +54,7 @@
 ### go
 ```yaml
 go:
+    benchmark:
     build:
         -tags:
     clean:
@@ -62,7 +64,7 @@ go:
         GO111MODULE: # 模块功能go.mod
         GOCACHE:
         GOENV:
-        GOMODCACHE:
+        GOMODCACHE: # 模块安装路径
         GOPATH: # go项目默认路径（包路径）
         GOPROXY: # Go模块代理
         GOROOT: # go安装根目录
@@ -71,12 +73,13 @@ go:
         GOMOD:
         GOWORK:
     fmt: # 格式化代码
-    get: # 下载包
-    help:
+    get: # 下载、更新包
+        -u: # 更新包
+    help: # 帮助命令
     install: # 本地安装包（本地发布）
-    list: #
+    list: # 列出所有模块
     mod: # 模块管理工具
-        download: # 下载依赖
+        download: # 下载所有依赖
         edit: # 编辑go.mod
             -replace:
         graph: # 查看依赖结构
@@ -87,9 +90,20 @@ go:
         why:
     run: # 运行
     test: # 运行测试用例
+        -cover:
+        -v:
     tool: # go工具链
+        asm:
+        compilie:
+        cover:
+        link:
+        nm:
+        objdump:
+        pack:
+        pprof:  
+        trace:
+        vet:
     version: # go版本
-
 ```
 
 go命令行
@@ -100,7 +114,7 @@ go命令行
 go.mod:
     go: # 指定go版本
     module: # 模块声明
-    replace: # 项目包依赖替换
+    replace: # 项目包依赖替换，常用于引入本地依赖
     require: # 项目依赖包
 ```
 
@@ -112,32 +126,6 @@ go.mod:
 ## 核心内容
 ```yaml
 std:
-    _builtin:
-        bool:
-        byte: # uint8字节
-        chan:
-            Close():
-        error:
-        float32:
-        int:
-        int64:
-        map:
-            Add():
-            Set():
-        nil: # 空值
-        rune: # int32字符
-        slice:
-        string:
-        append(): # slice追加元素
-        cap(): # 数组容量
-        close(): # 关闭chan
-        delete(): # 删除键值对
-        len(): # 数组长度
-        make(): # 开辟内存（slice、map、channel）（返回引用）
-        new(): # 开辟内存（返回指针）
-        panic(): # 抛出异常
-        print(): # 控制台输出
-        recover():
     archive:
         tar:
         zip:
@@ -169,6 +157,32 @@ std:
         NewReader():
         NewWriter():
         Peek(): 
+    builtin: # 内置模块
+        bool:
+        byte: # uint8字节
+        chan:
+            Close():
+        error:
+        float32:
+        int:
+        int64:
+        map:
+            Add():
+            Set():
+        nil: # 空值
+        rune: # int32字符
+        slice:
+        string:
+        append(): # slice追加元素
+        cap(): # 数组容量
+        close(): # 关闭chan
+        delete(): # 删除键值对
+        len(): # 数组长度
+        make(): # 开辟内存（slice、map、channel）（返回引用）
+        new(): # 开辟内存（返回指针）
+        panic(): # 抛出异常
+        print(): # 控制台输出
+        recover():
     bytes: # 字节切片
         Buffer:
             Bytes():
@@ -215,6 +229,7 @@ std:
         TrimFunc():
     cmp:
     compress:
+        bzip2:
         gzip:
         zlib:
     container:
@@ -236,9 +251,11 @@ std:
         WithValue(): # 设置context kv
     crypto:
         aes:
+        cipher:
         des:
         md5:
         rand:
+        sha512:
     database:
         sql:
             driver:
@@ -249,8 +266,10 @@ std:
         buildinfo:
         elf:
         pe:
+    embed:
     encoding:
         base64:
+        binary:
         csv:
         hex:
         json:
@@ -273,6 +292,7 @@ std:
             Error():
         Is():
         New(): # 新建错误
+    expvar:
     flag: # 命令行解析
         Args*(L)
         Int():
@@ -321,6 +341,7 @@ std:
         parser:
         types:
     hash:
+        crc64:
     html:
         template:
     image:
@@ -329,13 +350,19 @@ std:
         gif:
         jpeg:
         png:
+    index:
     io:
         fs:
         ioutil: # io工具包
             ReadAll():
                 ---
                 bytes:
+            ReadDir():
             ReadFile():
+            NopCloser():
+            TempDir():
+            TempFile():
+            WriteFile():
         Closer:
             Close():
         EOF:
@@ -372,14 +399,6 @@ std:
             str:
             ---
             length:
-    ioutil:
-        NopCloser():
-        ReadAll():
-        ReadDir():
-        ReadFile():
-        TempDir():
-        TempFile():
-        WriteFile():
     iter:
     log: # 日志
         Logger:
@@ -670,6 +689,7 @@ std:
         Unix():
     unique:
     unsafe:
+    weak:
 ```
 
 
@@ -873,12 +893,14 @@ Type、Value
 
 
 
-### module
+### Module
+
+包、模块
 
 package定义包、主执行包`main`
+每个目录只能包含一个包（package）
 
 公共访问：首字母大写
-
 `init()`：包初始化函数
 
 
