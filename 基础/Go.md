@@ -6,6 +6,8 @@
 
 ## 基础介绍
 
+无需分号结束`;`
+
 `package main`声明主模块（主运行模块）
 
 
@@ -14,10 +16,8 @@
 `GOPROXY`: 模块代理
 `GOMODCACHE`: 第三方模块安装
 
-
 `GOPATH`: go模块搜索路径
 `GOPATH/pkg/mod`: 存放下载的第三方包
-
 
 mingw安装：`https://sourceforge.net/projects/mingw/`
 
@@ -90,7 +90,8 @@ go:
         why:
     run: # 运行
     test: # 运行测试用例
-        -cover:
+        -bench: # 基准测试
+        -cover: # 测试覆盖率
         -v:
     tool: # go工具链
         asm:
@@ -129,14 +130,14 @@ std:
     archive:
         tar:
         zip:
-    bufio: # 输入缓冲
-        Reader:
+    bufio: # 输入、输出缓冲
+        Reader: # 输入缓冲区
             Read():
             ReadLine():
-            ReadString():
+            ReadString(): # 
             Reset():
             UnreadByte():
-        ReadWriter:
+        ReadWriter: # 输出缓冲区
         Scanner:
             Err():
             Scan():
@@ -154,7 +155,7 @@ std:
             Reset():
             Write():
             WriteString():
-        NewReader():
+        NewReader(): # 新建输入缓冲区
         NewWriter():
         Peek(): 
     builtin: # 内置模块
@@ -176,8 +177,8 @@ std:
         append(): # slice追加元素
         cap(): # 数组容量
         close(): # 关闭chan
-        delete(): # 删除键值对
-        len(): # 数组长度
+        delete(): # 删除map键值对
+        len(): # 数组长度、字符串长度
         make(): # 开辟内存（slice、map、channel）（返回引用）
         new(): # 开辟内存（返回指针）
         panic(): # 抛出异常
@@ -236,7 +237,7 @@ std:
         heap:
         list:
         ring:
-    context:
+    context: # 上下文管理
         Context:
             Deadline():
             Done(): # 上下文结束channel
@@ -247,7 +248,7 @@ std:
         TODO():
         WithCancel(): # 上下文结束函数
         WithDeadline():
-        WithTimeout():
+        WithTimeout(): # 超时关闭上下文
         WithValue(): # 设置context kv
     crypto:
         aes:
@@ -288,7 +289,7 @@ std:
             Valid(): # json格式校验
         xml:
     errors:
-        error:
+        error: # 异常基类
             Error():
         Is():
         New(): # 新建错误
@@ -331,7 +332,7 @@ std:
         Scanf():
         Scanln(): # 输入一行
         Sprint():
-        Sprintf(): # 格式化字符串
+        Sprintf(): # 字符串格式化
         Sprintln():
     go:
         ast:
@@ -343,7 +344,10 @@ std:
     hash:
         crc64:
     html:
-        template:
+        template: # html模板引擎
+            New():
+                Execute():
+                Parse():
     image:
         color:
         draw:
@@ -417,7 +421,7 @@ std:
         SetOutput(): # 设置日志输出
         SetPrefix():
     maps:
-    math:
+    math: # 数学
         big:
         complx:
         rand:
@@ -439,7 +443,7 @@ std:
         Sqrt():
         Trunc():
     mime:
-    net:
+    net: # 网络
         http:
             Request:
                 Body:
@@ -474,17 +478,27 @@ std:
                 String():
             Values:
             Parse():
-        Conn:
-            Close():
-            Read():
+        Conn: # 连接对象
+            Close(): # 关闭连接
+            Read(): # 读取字节数据
             RemoteAddr():
-            Write():
+            Write(): # 写入字节数据
         Listener:
-            Accept():
+            Accept(): # 接收socket连接
+            Close(): # 关闭连接
+        UDPAddr:
+            IP:
+            Port:
+            Zone:
+        UDPConn: # UDP连接
             Close():
-        Dial(): # socket连接
-        Listen(): # socket监听
-    os:
+            ReadFromUDP():
+            WriteToUDP():
+        Dial(): # TCP请求连接
+        DialUDP(): # UDP请求连接
+        Listen(): # 端口监听
+        ListenUDP(): # 端口监听
+    os: # 操作系统相关
         exec:
         signal:
         user:
@@ -558,40 +572,47 @@ std:
             Join(): # 路径合并
     plugin:
     reflect: # 反射
+        rtype:
         Float32:
         Int32:
         Method: # 字段方法
             Name:
             Type:
-            Call():
-        rtype:
+            Call(): # 调用方法，需要Value作为参数
         StructField: # 字段结构
-            Name:
-            Tag:
+            Name: # 字段名称
+            Tag: # 字段标签
                 Get():
             Type:
             Interface(): # 字段值
+        StructTag: # tag标签
         Type: # 类型
+            Elem(): #  获取类型指针所指向的元素类型
             Field(): # 根据index获取字段
             FieldByName(): # 根据名称查找字段
+            Implements(): # 判断接口实现
             Kind(): # 类型种类
             Method(): # 根据index获取方法
             MethodByName():
             Name(): # 类型名
             NumField(): # 字段个数
             NumMethod():
-        Value: # 值
-            Elem(): # 根据指针取值
+        Value: # 值，常传指针
+            Elem(): # 根据指针取值、解引用
+                SetBool():
+                SetInt():
+                SetString():
             FieldByName():
             Float():
             Int():
             IsNil():
-            Kind():
+            Kind(): # 变量类型
             MapIndex():
             MethodByName():
+            NumField(): # 字段个数
             SetInt():
-        TypeOf():
-        ValueOf():
+        TypeOf(): # 获取变量类型Type
+        ValueOf(): # 获取变量值Value
     regexp:
         syntax:
     runtime:
@@ -626,15 +647,28 @@ std:
     strconv: # 字符串转换
         Itoa():
         ParseFloat():
-    strings: # 字符串工具
+    strings: # 字符串
         Builder:
             String():
             Write(): # 写入
         Reader:
         NewReader(): # 生成Reader
+        Contains(): # 字符串包含
+        HasPrefix():
+        HasSuffix():
+        Index(): # 字符串索引
+        LastIndex(): # 倒序索引
+        Replace(): # 字符串替换
+        ReplaceAll():
+        Split(): # 字符串分隔
+        SplitAfter():
+        SplitN():
+        Title():
+        ToUpper():
         Trim():
+        TrimSpace():
     structs:
-    sync:
+    sync: # 同步
         atomic:
         Mutex: # 互斥锁
             Lock():
@@ -655,17 +689,22 @@ std:
         iotest:
         quick:
         slogtest:
-        T:
+        T: # 结果记录
+            Errorf():
+            Fatal():
+            Run(): # 运行子测试
     text:
         scanner:
+        template: # 内置模板引擎 
+            New():
+                Execute(): # 模板上下文数据传递
+                Parse(): # 模板解析
         tabwriter:
-        template:
-            parse:
     time: # 时间
         Date: # 日期
         Duration: # 时间间隔
         Location: # 时区
-        Millisecond:
+        Millisecond: # 毫秒
         Month:
         Second: # 秒
         Time: # 时间
@@ -684,11 +723,12 @@ std:
         Now(): # 当前时间
         Parse(): # 时间字符串解析(Time): 2006-01-02 15:04:05
         ParseInLocation():
-        Sleep(): # 进程睡眠
+        Sleep(): # 线程睡眠
         Tick(): # 定时器(chan)
         Unix():
     unique:
     unsafe:
+        Sizeof(): # 获取变量内存大小
     weak:
 ```
 
@@ -723,45 +763,105 @@ types:
 
 
 #### String
+```go
+// 字符串声明
+var str string = "xxxx"
+
+// 多行字符串
+str := `This is a multi-line
+It can span multiple lines.`
+
+// 字符串长度
+str_len := len(str)
+
+// 转换为字节切片
+byteArr := []byte(str)
+```
 
 字符串
 
-值传递
+值传递、不可变
+支持加号`+`拼接
 
 
 #### Pointers
+```go
+// 声明一个 int 类型的变量
+var a int = 58
+
+// 获取变量 a 的指针
+var p *int = &a
+
+// 通过指针 p 访问 a 的值（解引用）
+fmt.Println(*p) // 输出: 58
+```
 
 
-指针
+指针`&`、`*T`、值传递
 
-`&`、`*ptr`
-
-值传递
-
-
+`nil`空指针
 
 
 
 
 #### Array
+```go
+// 数组声明、默认值为0
+var arr [5]int
 
-`[]T`
+// 初始化器声明
+arr := [3]int{1, 2, 3}
 
-值传递
+// 省略长度初始化声明
+arr := [...]int{1, 2, 3, 4}
+```
+
+`[n]T`
+
+固定长度数组、值传递
+对于数组、长度和容量是一样的
+
+
+
 
 
 #### Slice
+```go
+// 切片声明
+slice := []int{1, 2, 3}
 
-切片、动态数组
+// make创建、动态内存分配
+slice := make([]int, 3)
 
-引用传递
+// 添加元素（底层扩容）
+ slice = append(slice, 4, 5)
+```
+
+切片、动态数组、引用传递
+长度、容量
 
 默认长度、容量为0，没有开辟空间
-
 切片截取：左闭右开
+
+使用切片语法进行元素删除操作
 
 
 #### Map
+```go
+// 字面量声明
+m := map[string]int{
+    "age":   30,
+    "score": 90,
+}
+
+// make动态创建
+m := make(map[string]int)
+
+// key存在判断
+value, exists := m["age"]
+
+// delete()删除key
+```
 
 映射：`map[K]V`
 
@@ -771,18 +871,43 @@ types:
 
 
 #### Channel
+```go
+// 创建无缓冲通道
+ch := make(chan string)
 
-- `chan T`
-- `chan`
-- `chan`
+// 启动一个新的 goroutine 发送数据
+go func() {
+    ch <- "Hello, Go!"
+}()
 
-go通道：`chan T`
+// 从通道接收数据
+msg := <-ch
 
-引用传递
 
-go协程通信
+// 创建一个缓冲区大小为 2 的通道
+ch := make(chan string, 2)
 
-通道默认无缓存
+// 关闭channel、关闭后的通道不能再发送数据，但仍然可以接收数据直到通道为空
+close(ch)
+
+// select多路复用
+select {
+case msg1 := <-ch1:
+    fmt.Println(msg1)
+case msg2 := <-ch2:
+    fmt.Println(msg2)
+default:
+    fmt.Println("No message received") // 输出: No message received
+}
+```
+
+- `chan T`: 双向通道
+- `chan<- T`: 单向发送通道
+- `<-chan T`: 单向接收通道
+
+go通道：`chan T`、引用传递
+
+go协程通信、通道默认无缓存
 
 for...range.. 遍历channel
 select 多路复用channel
@@ -790,66 +915,138 @@ select 多路复用channel
 
 ### Control Flow
 ```yaml
-:
-    defer: # 延迟处理（在return之后）
-    for ... range ...: # 迭代遍历
+Control Flow:
+    :=: # 初始化声明语句
+    nil: # 空值
+    defer ...: # 延迟处理（在return之后）
+    for: # 普通for循环
+    for ... range ...: # 迭代遍历、带索引
     go ...: # goroutine
     if ... else if ... else ...:
     loop ...:
         break:
         continue:
         goto:
-    select ... case ...: # channel select
+    select ... case ...: # channel通道多路复用
     switch ... case ... default ...:
         fallthrough: # 默认不穿透
 ```
 
 
 #### Exception Handler
+```go
+func divide(a, b int) (int, error) {
+    if b == 0 {
+        // 返回一个错误
+        return 0, errors.New("division by zero")
+    }
+    return a / b, nil
+}
+```
 
-panic()、recovery():
+通过函数的返回值来处理、约定最后一个返回值
+`panic()`、`recovery()`
+recovery常配合defer处理
 
 
 
 ### Function
 ```golang
-func myfunc() (int, string) {
-    return ...
+// 函数声明
+func greet(name string) string {
+    return "Hello, " + name
+}
+
+// 返回值命名、优化多返回值
+func divide(a, b float64) (quotient float64, err error) {
+    if b == 0 {
+        err = fmt.Errorf("division by zero")
+        return
+    }
+    quotient = a / b
+    return
 }
 ```
 
 
+- 支持多返回值、返回值命名
+- 匿名函数、闭包
+- 可变参数`...T`
+
+
+#### Defer
+
+延迟执行函数
 
 
 
 
 ### Struct
-
-
-```golang
-type User struct {
+```go
+// 结构体声明
+type Person struct {
     Name string
     Age int
 }
+
+// 结构体初始化声明
+p := Person{"Alice", 25}
+
+// 命名初始化
+p := Person{Name: "Alice", Age: 25}
+
+// new创建指针
+p := new(Person)
 ```
 
-结构体
-
-值传递
+结构体、值传递
 
 
 
 #### Method
-
-方法
 ```golang
-func (u *User) myMethod() {
+func (u *Person) myMethod() {
     ...
 }
 ```
 
-#### Extends
+方法
 
+指针接收者：
+- 方法可以修改结构体的字段
+- 避免结构体的复制开销
+
+值接收者：常用于类似toString一类，不需要修改结构体字段的方法中
+- 方法会接收到结构体的一个副本
+- 不能修改结构体的字段、因为它操作的是结构体的副本
+
+
+
+
+#### Extends
+```go
+// 父类定义
+type Animal struct {
+    Name string
+}
+
+// 父类方法
+func (a Animal) Speak() {
+    fmt.Println(a.Name, "makes a sound")
+}
+
+// 子类定义
+type Dog struct {
+    Animal // 继承 Animal
+    Breed  string
+}
+
+// 子类手动初始化父类，可直接调用父类方法
+d := Dog{Animal: Animal{Name: "Buddy"}, Breed: "Labrador"}
+d.Speak()
+```
+
+默认没有继承、只有组合
 通过匿名字段组合实现继承
 
 
@@ -862,10 +1059,7 @@ type Animal interface {
 }
 ```
 
-
-用于实现多态
-
-隐式接口实现
+用于实现多态、隐式接口实现
 
 接口没有实体、用指针接收
 接口指针持有真实类型的引用
@@ -882,11 +1076,21 @@ type Animal interface {
 
 #### Reflect
 
-反射
+反射、Type、Value
+- Type:  Go 变量的类型
+- Value: Go 变量的值
 
-Type、Value
+reflect.Value必须是指针(pointer)，否则无法修改变量，需要调用Elem()取值后修改
+reflect.TypeOf(p) 获取的是 *Person 类型，通过 Elem() 获取的是 Person 类型
 
-
+Type与Value:
+- 使用 reflect.Type
+    - 只需要检查变量类型，比如 int、struct、map 等。
+    - 获取结构体字段名、方法。
+- 使用 reflect.Value
+    - 需要读取变量的值，比如 v.Int()、v.String()。
+    - 需要修改变量的值（必须传指针）。
+    - 需要调用方法 v.MethodByName("SayHello").Call(nil)。
 
 
 
@@ -908,16 +1112,21 @@ package定义包、主执行包`main`
 ### Concurrent
 
 #### Goroutine
+```go
+// 匿名函数启动Goroutine
+go func() {
+    fmt.Println("Hello from Goroutine!")
+}()
+```
 
 go协程
+- context实现协程管理(关闭)
+- sync实现同步
+- channel实现通信
 
+Go 运行时会自动调度 Goroutine 到多个线程上运行。默认情况下，它会使用 CPU 核心数 作为最大并行度
 main主协程退出，程序结束运行
 
-#### GMP
-
-- G：协程
-- P：协程调度器（本地队列、全局队列）
-- M：线程
 
 
 
@@ -928,11 +1137,21 @@ main主协程退出，程序结束运行
 Context上下文树
 
 
+
+#### GMP
+
+- G：协程
+- P：协程调度器（本地队列、全局队列）
+- M：线程
+
+
+
+
 ### Test
 
 `testing`
 
-`_test.go`测试文件、大驼峰命名测试函数`testing.T`
+`_test.go`测试文件、`TestXxx`测试函数、大驼峰命名测试函数`testing.T`
 
 
 
