@@ -1,13 +1,12 @@
 # Go
 
 `go官方文档：https://golang.google.cn/doc/`
-``
+`Go by Example文档：https://gobyexample.com/slices`
 
 
 ## 基础介绍
 
 无需分号结束`;`
-
 `package main`声明主模块（主运行模块）
 
 
@@ -20,6 +19,15 @@
 `GOPATH/pkg/mod`: 存放下载的第三方包
 
 mingw安装：`https://sourceforge.net/projects/mingw/`
+
+
+核心io.Reader、io.Writer实现
+- bytes.Reader/Writer
+- Strings.Reader/Writer
+- os.File
+- net.Conn
+- bufio.Reader/Writer
+
 
 ### 安装目录
 ```yaml
@@ -55,7 +63,7 @@ mingw安装：`https://sourceforge.net/projects/mingw/`
 ```yaml
 go:
     benchmark:
-    build:
+    build: # 构建
         -tags:
     clean:
     doc:
@@ -133,8 +141,8 @@ std:
     bufio: # 输入、输出缓冲
         Reader: # 输入缓冲区
             Read():
-            ReadLine():
-            ReadString(): # 
+            ReadLine(): # 读取整行
+            ReadString(): # 读取整行，推荐（包含回车\n）
             Reset():
             UnreadByte():
         ReadWriter: # 输出缓冲区
@@ -183,9 +191,9 @@ std:
         new(): # 开辟内存（返回指针）
         panic(): # 抛出异常
         print(): # 控制台输出
-        recover():
+        recover(): # 错误恢复
     bytes: # 字节切片
-        Buffer:
+        Buffer: # 字节缓存流
             Bytes():
             Len():
             NextA():
@@ -195,7 +203,7 @@ std:
             ReadFrom():
             ReadString():
             Reset():
-            String():
+            String(): # 缓冲区内字节数据转字符串
             Write():
             WriteByte():
             WriteRune():
@@ -233,10 +241,21 @@ std:
         bzip2:
         gzip:
         zlib:
-    container:
-        heap:
-        list:
-        ring:
+    container: # 容器
+        heap: # 堆
+        list: # 双向链表
+            Element: # 联表节点
+                Next():
+                Prev():
+            List: # 双向链表
+                Back():
+                Front():
+                InsertAfter():
+                InsertBefore():
+                Len():
+                Remove():
+            New():
+        ring: # 环形链表
     context: # 上下文管理
         Context:
             Deadline():
@@ -250,13 +269,19 @@ std:
         WithDeadline():
         WithTimeout(): # 超时关闭上下文
         WithValue(): # 设置context kv
-    crypto:
-        aes:
+    crypto: # 加密
+        aes: # 高效对称加密
+            NewCipher():
         cipher:
         des:
+        hmac:
+            New():
         md5:
+            Sum(): # 计算md5哈希，返回字节数组
         rand:
+        rsa: # 公私钥加密
         sha512:
+            Sum256():
     database:
         sql:
             driver:
@@ -268,12 +293,15 @@ std:
         elf:
         pe:
     embed:
-    encoding:
-        base64:
+    encoding: # 编解码
+        base64: # Base64
+            StdEncoding:
+                EncodeToString():
         binary:
         csv:
-        hex:
-        json:
+        hex: # 十六进制
+            EncodeToString(): # 字节数据解码成十六进制字符串
+        json: # JSON
             _tag:
                 json:
                     omitempty:
@@ -288,14 +316,14 @@ std:
             Unmarshal(): # json反序列化
             Valid(): # json格式校验
         xml:
-    errors:
+    errors: # 异常
         error: # 异常基类
             Error():
-        Is():
+        Is(): # 异常类型判断
         New(): # 新建错误
     expvar:
     flag: # 命令行解析
-        Args*(L)
+        Args():
         Int():
         IntVar():
         NArg():
@@ -312,7 +340,7 @@ std:
         Fscanf():
         Fscanln():
         Print():
-        Printf():
+        Printf(): # 格式化输出
             %b: # 二进制
             %d: # 十进制数字
             %e: # 科学计数法
@@ -329,7 +357,7 @@ std:
                 0: # 0填充
         Println(): # 打印换行
         Scan():
-        Scanf():
+        Scanf(): # 格式化输入
         Scanln(): # 输入一行
         Sprint():
         Sprintf(): # 字符串格式化
@@ -343,11 +371,17 @@ std:
         types:
     hash:
         crc64:
+        Hash: # 哈希
+            Sum():
     html:
         template: # html模板引擎
-            New():
-                Execute():
-                Parse():
+            Template: # HTML模板
+                Execute(): # 传递模板数据，并执行解析
+                Parse(): # 解析字符串
+                ParseFiles(): # 解析文件
+            New(): # 新建模板
+        EscapeString(): # 转义 HTML
+        UnescapeString(): # 反转义 HTML
     image:
         color:
         draw:
@@ -355,9 +389,9 @@ std:
         jpeg:
         png:
     index:
-    io:
+    io: # 输入、输出
         fs:
-        ioutil: # io工具包
+        ioutil: # io工具包（过时）
             ReadAll():
                 ---
                 bytes:
@@ -369,12 +403,13 @@ std:
             WriteFile():
         Closer:
             Close():
-        EOF:
+        EOF: # 读取结束异常符
         LimitedReader:
             N:
             R:
-        PipeReader:
-        Reader:
+        PipeReader: # 管道输入器
+        PipeWriter: # 管道写出器
+        Reader: # 读取器接口（字节）
             Read():
         ReaderFrom():
             ReadFrom():
@@ -385,23 +420,20 @@ std:
             Size():
         Seeker:
             Seek():
-        Writer:
+        Writer: # 写入器接口（字节）
             Write():
-        Copy(): # 复制
+        Copy(): # 流数据拷贝
         CopyBuffer():
         CopyN():
         LimitReader():
         MultiReader():
         MultiWriter():
         NewSectionReader():
-        Pipe():
+        Pipe(): # 创建输入输出管道
         ReadAll():
         ReadAtLeast():
         ReadFull():
         WriteString(): # 写入字符串
-            file:
-            str:
-            ---
             length:
     iter:
     log: # 日志
@@ -424,7 +456,7 @@ std:
     math: # 数学
         big:
         complx:
-        rand:
+        rand: # 随机数
             Int():
             Intn():
             Seed():
@@ -442,7 +474,10 @@ std:
         Pow():
         Sqrt():
         Trunc():
-    mime:
+    mime: # 多媒体类型
+        multipart:
+        ParseMediaType(): # 返回字符串
+        TypeByExtension():
     net: # 网络
         http:
             Request:
@@ -467,7 +502,7 @@ std:
         rpc:
         smtp:
         textproto:
-        url:
+        url: # URL
             URL:
                 Host:
                 Path:
@@ -503,11 +538,14 @@ std:
         signal:
         user:
         Args: # 命令行参数
-        DirEntry:
-        File: # 文件对象
+        DirEntry: # 文件条目
+            IsDir(): # 判断是否是目录
+            Name(): # 文件名
+        File: # 文件流对象
             Close(): # 关闭文件
             Read():
             ReadAt():
+            ReadDir(): # 读取所有文件条目 os.DirEntry
             Seek():
             Stat(): # 文件信息
             Write():
@@ -548,7 +586,7 @@ std:
         Exit(): # 进程结束
         FileMode(): # 文件权限
         FindProcess(): 
-        Getenv(): # 获取环境变量
+        Getenv(): # 获取系统环境变量
         Getgid():
         Getpid(): # 获取进程id
         Getppid():
@@ -559,17 +597,22 @@ std:
         MkdirAll():
         Open(): # 打开文件
         OpenFile():
-        ReadDir(): # 读取目录
-        Remove():
-        RemoveAll():
+        ReadDir(): # 获取所有文件条目
+        Remove(): # 删除文件
+        RemoveAll(): # 删除所有文件
         Rename():
         Setenv(): # 设置环境变量
         StartProcess(): # 开启子进程
         TempDir():
-    path:
-        filepath:
+    path: # 文件路径，适用于Unix风格路径
+        filepath: # 适用于文件系统路径，可以在 Windows 和 Linux 上正确处理路径分隔符
             Abs(): # 获取绝对路径
+            Base(): # 获取文件名
+            Dir(): # 获取目录名
+            Ext(): # 获取文件后缀
+            IsAbs(): # 是否绝对亮晶晶
             Join(): # 路径合并
+            WalkDir(): # 文件遍历（深度遍历）
     plugin:
     reflect: # 反射
         rtype:
@@ -615,7 +658,7 @@ std:
         ValueOf(): # 获取变量值Value
     regexp:
         syntax:
-    runtime:
+    runtime: # 系统运行时
         cgo:
         coverage:
         debug:
@@ -623,6 +666,7 @@ std:
         pprof:
         race:
         trace:
+        Caller(): # 获取当前函数调用栈信息（程序计数器(函数名)、文件名、行号）
         Goexit(): # 退出goroutine
         GOMAXPROCS():
         Gosched(): # 让出时间片
@@ -630,20 +674,20 @@ std:
     signal: # 信号
         Notify(): # 信号监听（配合chan）
     slices:
-    sort:
-        Interface:
-            Len():
-            Less():
-            Swap():
+    sort: # 排序
+        Interface: # 自定义排序接口
+            Len(): # 长度
+            Less(): # 小于定义
+            Swap(): # 元素交换
         StringSlice:
         Float64s():
-        Ints():
+        Ints(): # 整数切片排序
         IsSorted():
         Reverse():
         Search(): # 查找
         SearchInts():
         Sort():
-        Strings():
+        Strings(): # 字符串切片排序
     strconv: # 字符串转换
         Itoa():
         ParseFloat():
@@ -651,13 +695,14 @@ std:
         Builder:
             String():
             Write(): # 写入
-        Reader:
+        Reader: # 字符输入流
         NewReader(): # 生成Reader
         Contains(): # 字符串包含
         HasPrefix():
         HasSuffix():
         Index(): # 字符串索引
         LastIndex(): # 倒序索引
+        NewReader():
         Replace(): # 字符串替换
         ReplaceAll():
         Split(): # 字符串分隔
@@ -700,6 +745,7 @@ std:
                 Execute(): # 模板上下文数据传递
                 Parse(): # 模板解析
         tabwriter:
+            parse():
     time: # 时间
         Date: # 日期
         Duration: # 时间间隔
@@ -712,22 +758,25 @@ std:
             After():
             Before():
             Equal():
-            Format(): # 时间字符串格式化
+            Format(): # 时间字符串格式化 2006-01-02 15:04:05
+            String(): # 
             Sub():
-            Unix():
+            Unix(): # 时间戳 秒
+            UnixMilli(): # 时间戳 毫秒
             Year():
+        After(): # 延时执行 channel
         AfterFunc(): # 延迟执行
         LoadLocation(): # 
         NewTicker():
         NewTimer():
         Now(): # 当前时间
-        Parse(): # 时间字符串解析(Time): 2006-01-02 15:04:05
+        Parse(): # 日期时间解析(Time): 2006-01-02 15:04:05
         ParseInLocation():
         Sleep(): # 线程睡眠
-        Tick(): # 定时器(chan)
+        Tick(): # 定时器执行 channel
         Unix():
     unique:
-    unsafe:
+    unsafe: # 不安全操作，底层操作
         Sizeof(): # 获取变量内存大小
     weak:
 ```
@@ -749,11 +798,8 @@ types:
 ```
 
 `var`定义变量、`const`定义常量
-
 `:=`自动类型推断声明（不能声明全局变量）
-
-`.(T)`：类型断言
-
+`.(T)`：类型断言，常用于类型判断
 `const itoa`：定义常量枚举（0开始）
 
 
@@ -917,9 +963,11 @@ select 多路复用channel
 ```yaml
 Control Flow:
     :=: # 初始化声明语句
+    const: # 常量声明
     nil: # 空值
+    var: # 变量声明
     defer ...: # 延迟处理（在return之后）
-    for: # 普通for循环
+    for: # 普通for循环，支持while、死循环实现
     for ... range ...: # 迭代遍历、带索引
     go ...: # goroutine
     if ... else if ... else ...:
