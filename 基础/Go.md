@@ -1,7 +1,7 @@
 # Go
 
 `go官方文档：https://golang.google.cn/doc/`
-`Go by Example文档：https://gobyexample.com/slices`
+`Go by Example文档：https://gobyexample.com/multiple-return-values`
 
 
 ## 基础介绍
@@ -99,12 +99,18 @@ go:
     run: # 运行
     test: # 运行测试用例
         -bench: # 基准测试
+        -count:
         -cover: # 测试覆盖率
-        -v:
+        -coverprofile:
+        -failfast:
+        -parallel:
+        -run: # 运行指定测试
+        -tags: # 运行指定测试
+        -v: # 详细信息
     tool: # go工具链
         asm:
         compilie:
-        cover:
+        cover: # 查看基准测试报告
         link:
         nm:
         objdump:
@@ -146,11 +152,11 @@ std:
             Reset():
             UnreadByte():
         ReadWriter: # 输出缓冲区
-        Scanner:
+        Scanner: # 输入扫描
             Err():
-            Scan():
+            Scan(): # 循环扫描
             Split():
-            Text():
+            Text(): # 输入的文档
         ScanBytes:
         ScanRunes:
         ScanWords:
@@ -163,6 +169,7 @@ std:
             Reset():
             Write():
             WriteString():
+        NewScanner():
         NewReader(): # 新建输入缓冲区
         NewWriter():
         Peek(): 
@@ -185,6 +192,7 @@ std:
         append(): # slice追加元素
         cap(): # 数组容量
         close(): # 关闭chan
+        copy(): # 值拷贝、切片拷贝
         delete(): # 删除map键值对
         len(): # 数组长度、字符串长度
         make(): # 开辟内存（slice、map、channel）（返回引用）
@@ -282,12 +290,28 @@ std:
         rsa: # 公私钥加密
         sha512:
             Sum256():
-    database:
+    database: # 数据库
         sql:
-            driver:
-            Db:
+            Conn:
+            Db: # 数据库连接
+                Close():
+                Exec(): # 执行sql，返回Result
+                Query(): # 执行查询sql，返回Rows
+                QueryRow():
                 SetMaxOpenConns():
+            Driver:
+            Result: # ddl操作结果
+                LastInsertId():
+                RowsAffected():
+            Rows: # sql查询结果
+                Close():
+                Err(): # 异常
+                Next(): # 结果迭代
+                Scan(): # 值扫描输入
+            Tx:
             Named(): # sql具名参数
+            Open(): # 打开数据库连接
+            Register(): # 注册数据库驱动
     debug:
         buildinfo:
         elf:
@@ -411,6 +435,7 @@ std:
         PipeWriter: # 管道写出器
         Reader: # 读取器接口（字节）
             Read():
+        ReaderAt: # 随机读取器接口
         ReaderFrom():
             ReadFrom():
         ReadWriter:
@@ -437,7 +462,7 @@ std:
             length:
     iter:
     log: # 日志
-        Logger:
+        Logger: # 日志器
             Fatal():
             Panic():
             Print():
@@ -452,7 +477,14 @@ std:
         SetFlags():
         SetOutput(): # 设置日志输出
         SetPrefix():
-    maps:
+    maps: # 映射工具包
+        Clone(): # 拷贝
+        Delete(): # 删除key
+        Equal(): # 内部元素相等判断
+        Keys(): # 获取所有key
+        Merge(): # 合并map
+        Map(): # 映射转换
+        Values(): # 获取所有value
     math: # 数学
         big:
         complx:
@@ -568,14 +600,14 @@ std:
             Pid:
             Signal(): # 进程发送信号
             Wait(): # 进程等待（阻塞当前进程）
+        Signal: # 进程信号
+        Stdin: # 标准输入
+        Stdout: # 标准输出
         O_APPEND:
         O_CREATE:
         O_RDWR:
         O_TRUNC:
         O_WRONLY:
-        Signal:
-        Stdin: # 标准输入
-        Stdout: # 标准输出
         Chdir(): # 修改工作目录
         Chmod():
         Chown():
@@ -598,6 +630,7 @@ std:
         Open(): # 打开文件
         OpenFile():
         ReadDir(): # 获取所有文件条目
+        ReadFile(): # 获取文件内容、字节数据
         Remove(): # 删除文件
         RemoveAll(): # 删除所有文件
         Rename():
@@ -656,8 +689,26 @@ std:
             SetInt():
         TypeOf(): # 获取变量类型Type
         ValueOf(): # 获取变量值Value
-    regexp:
+    regexp: # 正则表达式(查找、替换、分隔)（索引、字符串、匹配组）
         syntax:
+        Regexp: # 正则表达式对象
+            Find():
+            FindAll(): 
+            FindAllString(): # 查找所有字符串
+            FindAllStringIndex(): # 
+            FindIndex():
+            FindString(): # 查找
+            FindStringSubmatch(): # 获取子匹配组
+            FindStringSubmatchIndex():
+            Match():
+            MatchString(): # 匹配
+            ReplaceAllString():
+            ReplaceAllStringFunc():
+            Split(): # 分隔
+            String():
+        Compile(): # 编译
+        MatchString(): # 正则匹配
+        MustCompile():
     runtime: # 系统运行时
         cgo:
         coverage:
@@ -668,12 +719,27 @@ std:
         trace:
         Caller(): # 获取当前函数调用栈信息（程序计数器(函数名)、文件名、行号）
         Goexit(): # 退出goroutine
-        GOMAXPROCS():
-        Gosched(): # 让出时间片
+        GOMAXPROCS(): # 调整 CPU 并发
+        Gosched(): # 让出CPU时间片、非阻塞
         NumCPU():
     signal: # 信号
-        Notify(): # 信号监听（配合chan）
-    slices:
+        Notify(): # 通道设置信号监听（配合chan）
+    slices: # 切片
+        Clone():
+        Contains(): # 值包含判断
+        Copy(): # 切片拷贝
+        Equal(): # 切片内部值比较
+        Filter(): # 序列过滤
+        Index(): # 查找元素索引
+        IndexAny():
+        IndexFunc():
+        Map(): # 序列转换
+        Remove(): # 删除元素索引
+        Replace(): # 替换元素
+        Reverse():
+        Sort(): # 排序
+        SortFunc(): # 自定义排序
+        Unique(): # 序列去重
     sort: # 排序
         Interface: # 自定义排序接口
             Len(): # 长度
@@ -686,11 +752,12 @@ std:
         Reverse():
         Search(): # 查找
         SearchInts():
+        Slice(): # 切片排序
         Sort():
         Strings(): # 字符串切片排序
     strconv: # 字符串转换
         Itoa():
-        ParseFloat():
+        ParseFloat(): # 转换浮点型数据
     strings: # 字符串
         Builder:
             String():
@@ -714,17 +781,38 @@ std:
         TrimSpace():
     structs:
     sync: # 同步
-        atomic:
+        atomic: # 原子操作
+            AddInt64():
+            CompareAndSwapInt64():
+            LoadInt64():
+            StoreInt64():
+        Cond: # 条件变量，依赖锁机制
+            Signal(): # 唤醒
+            Wait(): # 等待唤醒
+        Map: # 并发安全Map
+            Delete():
+            Load():
+            Range(): # k-v 遍历
+            Store():
         Mutex: # 互斥锁
             Lock():
             Unlock():
-        RWMutex: # 读写锁
+        Once: # 执行一次
+            Do(): # 多个协程，只允许执行某函数一次
+        Pool(): # 对象复用池
+            New: # 自定义池对象创建
+            Get(): # 获取池中对象
+            Put(): # 归还池中对象
+        RWMutex: # 读写锁，允许同时多读
+            Lock(): # 写锁
             RLock():
             RUnlock():
+            Unlock():
         WaitGroup: # 等待计数
-            Add(): # 计数+1
-            Done(): # 计数-1
-            Wait(): # 等待
+            Add(): # 计数+1，开启协程时+1
+            Done(): # 计数-1，协程结束时-1
+            Wait(): # 等待归0
+        NewCond():
     syscall: # 系统调用
         js:
         SIGINT:
@@ -737,7 +825,10 @@ std:
         T: # 结果记录
             Errorf():
             Fatal():
+            Log():
+            Parallel(): # 并行测试
             Run(): # 运行子测试
+            Skip(): # 跳过测试
     text:
         scanner:
         template: # 内置模板引擎 
@@ -892,6 +983,7 @@ slice := make([]int, 3)
 使用切片语法进行元素删除操作
 
 
+
 #### Map
 ```go
 // 字面量声明
@@ -1026,7 +1118,16 @@ func divide(a, b float64) (quotient float64, err error) {
 
 延迟执行函数
 
+#### Generics
+```go
+// 泛型函数声明
+func Print[T any](value T) {
+	fmt.Println(value)
+}
+```
+泛型函数
 
+支持泛型参数约束、
 
 
 ### Struct
@@ -1102,8 +1203,14 @@ d.Speak()
 
 #### Interface
 ```go
+// 接口声明
 type Animal interface {
     myFunc() string
+}
+
+// 泛型接口
+type Stringer[T any] interface {
+	ToString() string
 }
 ```
 
@@ -1141,7 +1248,28 @@ Type与Value:
     - 需要调用方法 v.MethodByName("SayHello").Call(nil)。
 
 
+#### Generics
+```go
+// 泛型结构体声明
+type Container[T any] struct {
+	value T
+}
 
+// 泛型方法
+func (c *Container[T]) Get() T {
+	return c.value
+}
+
+// 使用
+c := Container[int]{value: 42}
+fmt.Println(c.Get()) // 42
+
+```
+
+泛型结构体
+
+`~`: 匹配类型及其别名
+`|`: 联合类型
 
 
 
@@ -1153,11 +1281,22 @@ package定义包、主执行包`main`
 每个目录只能包含一个包（package）
 
 公共访问：首字母大写
+
+##### init()
+
 `init()`：包初始化函数
+常用于数据库驱动注册
 
 
 
 ### Concurrent
+
+#### GMP
+
+- G：协程
+- P：协程调度器（本地队列、全局队列）
+- M：线程
+
 
 #### Goroutine
 ```go
@@ -1185,13 +1324,29 @@ main主协程退出，程序结束运行
 Context上下文树
 
 
+#### Mutex
 
-#### GMP
+互斥锁
 
-- G：协程
-- P：协程调度器（本地队列、全局队列）
-- M：线程
+#### WaitGroup
 
+等待计数
+
+
+#### Cond
+
+条件变量
+
+
+#### Pool
+
+对象复用池
+
+
+
+#### Atomic
+
+原子操作
 
 
 
@@ -1199,10 +1354,13 @@ Context上下文树
 
 `testing`
 
-`_test.go`测试文件、`TestXxx`测试函数、大驼峰命名测试函数`testing.T`
+`_test.go`测试文件、`TestXxx`、`BenchmarkXxx`测试函数、大驼峰命名测试函数`testing.T`
+
+
+#### Tags
+
+测试标签
 
 
 
-
-
-
+## 设计模式

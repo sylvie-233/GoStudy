@@ -6,8 +6,8 @@
 
 ## 基础介绍
 
-go web轻量级框架
-`github.com/gin-gonic/gin`
+go web轻量级框架`github.com/gin-gonic/gin`
+默认端口：8080
 
 
 
@@ -61,7 +61,7 @@ gin:
         HandleContext(): # 手动处理（实现请求转发）
         Header(): # 设置响应头
         HTML():
-        JSON(): # JSON响应
+        JSON(): # JSON数据响应
         JSONP():
         MustBindWith():
         MultipartForm():
@@ -96,7 +96,7 @@ gin:
         JSON():
         LoadHTMLFiles(): # 加载静态文件
         LoadHTMLGlob(): # 匹配加载所有模板文件
-        Run(): # 服务运行
+        Run(): # server服务运行
         SetFuncMap(): # 注册模板函数
         SetHTMLTemplate():
         Static(): # 静态文件目录挂载
@@ -133,6 +133,7 @@ gin:
     LoggerWithFormatter():
     New(): # 新建路由引擎
     Recovery(): # gin 内置异常处理中间件
+    SetMode(): # 设置开发模式
 
 validator:
     FieldLevel:
