@@ -511,12 +511,18 @@ std:
         ParseMediaType(): # 返回字符串
         TypeByExtension():
     net: # 网络
-        http:
-            Request:
+        http: # HTTP
+            Client: # 请求客户端
+                Timeout:
+                Do(): # 发起请求Request
+            Request: # 请求对象
                 Body:
+                Header:
             Response: # 响应对象
-                Body:
+                Body: # 响应体
+                    Close():
                 ContentLength:
+                Status:
                 StatusCode:
             ResponseWrite:
                 Header():
@@ -528,6 +534,8 @@ std:
             StatusOK:
             Get(): # get请求
             ListenAndServe(): # 监听服务
+            NewRequest(): # 新建请求
+            Post():
             PostForm():
         mail:
         netip:
@@ -981,6 +989,7 @@ slice := make([]int, 3)
 切片截取：左闭右开
 
 使用切片语法进行元素删除操作
+支持元素解构...
 
 
 
