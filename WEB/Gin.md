@@ -135,7 +135,7 @@ gin:
     Recovery(): # gin 内置异常处理中间件
     SetMode(): # 设置开发模式
 
-validator:
+validator: # 
     FieldLevel:
         Field():
     Func:

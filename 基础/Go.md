@@ -267,15 +267,15 @@ std:
     context: # 上下文管理
         Context:
             Deadline():
-            Done(): # 上下文结束channel
+            Done(): # 上下文结束channel，<-chan struct{}
             Err():
             Value():
         Background():
             Value():
         TODO():
-        WithCancel(): # 上下文结束函数
-        WithDeadline():
-        WithTimeout(): # 超时关闭上下文
+        WithCancel(): # 带结束 上下文
+        WithDeadline(): # 超时结束 上下文
+        WithTimeout(): # 超时关闭duration 上下文
         WithValue(): # 设置context kv
     crypto: # 加密
         aes: # 高效对称加密
@@ -347,14 +347,16 @@ std:
         New(): # 新建错误
     expvar:
     flag: # 命令行解析
+        FlagSet:
         Args():
         Int():
         IntVar():
         NArg():
         NFlag():
-        Parse(): # 参数解析
-        String():
+        Parse(): # 命令行解析
+        String(): # 定义参数
         StringVar(): # 参数绑定
+        Var():
     fmt: # 格式化
         Errorf(): # 异常格式化
         Fprint(): # 文件内容写入
@@ -401,8 +403,10 @@ std:
         template: # html模板引擎
             Template: # HTML模板
                 Execute(): # 传递模板数据，并执行解析
+                ExecuteTemplate(): # 模板渲染输出
                 Parse(): # 解析字符串
                 ParseFiles(): # 解析文件
+                ParseGlob():
             New(): # 新建模板
         EscapeString(): # 转义 HTML
         UnescapeString(): # 反转义 HTML
@@ -415,16 +419,16 @@ std:
     index:
     io: # 输入、输出
         fs:
-        ioutil: # io工具包（过时）
+        ioutil: # （过时）io工具包
             ReadAll():
                 ---
                 bytes:
-            ReadDir():
-            ReadFile():
+            ReadDir(): # 获取文件夹下所有文件名
+            ReadFile(): # 文件读取
             NopCloser():
             TempDir():
             TempFile():
-            WriteFile():
+            WriteFile(): # 文件写入
         Closer:
             Close():
         EOF: # 读取结束异常符
@@ -490,6 +494,7 @@ std:
         complx:
         rand: # 随机数
             Int():
+            Int31():
             Intn():
             Seed():
         MaxInt32:
@@ -574,7 +579,15 @@ std:
         Listen(): # 端口监听
         ListenUDP(): # 端口监听
     os: # 操作系统相关
-        exec:
+        exec: # 命令行
+            Command: # 命令类
+                Stdin: # 命令输入
+                CombinedOutput(): # 命令的标准输出和标准错误输出的合并内容
+                Output(): # 获取命令输出
+                Run():
+                Start():
+                StdoutPipe(): # 输出管道
+                Wait():
         signal:
         user:
         Args: # 命令行参数
@@ -795,8 +808,10 @@ std:
             LoadInt64():
             StoreInt64():
         Cond: # 条件变量，依赖锁机制
-            Signal(): # 唤醒
-            Wait(): # 等待唤醒
+            L: # 持有锁
+            Broadcast(): # 唤醒所有
+            Signal(): # 随机唤醒一个等待的goroutine
+            Wait(): # 等待唤醒，释放锁，被唤醒后直接持有锁
         Map: # 并发安全Map
             Delete():
             Load():
@@ -820,7 +835,7 @@ std:
             Add(): # 计数+1，开启协程时+1
             Done(): # 计数-1，协程结束时-1
             Wait(): # 等待归0
-        NewCond():
+        NewCond(): # 新建条件变量，传入锁
     syscall: # 系统调用
         js:
         SIGINT:
@@ -1099,6 +1114,53 @@ recovery常配合defer处理
 
 
 
+#### Select
+```go
+// select超时控制
+select {
+case msg := <-ch:
+    fmt.Println("收到消息：", msg)
+case <-time.After(2 * time.Second):
+    fmt.Println("超时了，没有收到数据")
+}
+```
+
+- select会随机选择一个可执行的case进行执行
+- 如果多个case都可执行，Go运行时会随机选择一个
+- 如果所有case都不可用，则：
+    - 如果有default，执行default，然后立即继续执行后续代码（非阻塞 elect）
+    - 如果没有default，则select会阻塞，直到某个case可用
+
+
+使用场景：
+- 多个通道的处理
+- 超时控制
+
+
+select需结合break标签才能跳出外层循环
+
+
+
+#### Template
+```yaml
+html/template:
+    {{ xxx }}: # 变量使用
+        template:
+        define ... end:
+```
+- text/template
+- html/template
+
+内置页面模板引擎
+
+
+
+
+
+
+
+
+
 ### Function
 ```golang
 // 函数声明
@@ -1327,15 +1389,23 @@ main主协程退出，程序结束运行
 
 
 #### Context
+- Background()：根context，一般用作顶层context
+- TODO()
+- WithCancel(parent)
+- WithTimeout(parent, duration)
+- WithDeadline(parent, time.Time)
+- WithValue(parent, key, value)
 
 多级Goroutine实现通信的一种工具，并发安全
-
 Context上下文树
-
+用于控制Goroutine取消、超时和携带请求范围值
 
 #### Mutex
 
 互斥锁
+
+加锁前的逻辑判断、加锁后要再判断一次
+
 
 #### WaitGroup
 
@@ -1343,8 +1413,70 @@ Context上下文树
 
 
 #### Cond
+```go
+var (
+	mutex = sync.Mutex{}
+	condP = sync.NewCond(&mutex)
+	condC = sync.NewCond(&mutex)
+	queue = make([]int, 0)
+)
 
-条件变量
+// 消费者
+func consumer(i int) {
+	for {
+        mutex.Lock()
+        // 空队列，等待唤醒
+        for len(queue) == 0 {
+            condC.Wait()
+        }
+
+        // 消费一条
+        fmt.Printf("%d 消费 %d\n", i, queue[0])
+        queue = queue[1:]
+        time.Sleep(time.Millisecond * 100)
+
+        // 唤醒生产者
+        condP.Broadcast()
+        mutex.Unlock()
+	}
+}
+
+// 生产者
+func producer(i int) {
+	for {
+        mutex.Lock()
+        // 满队列，等待唤醒
+        for len(queue) == 5 {
+            condP.Wait()
+        }
+
+        // 生产一条
+        rn := rand.Intn(10)
+        fmt.Printf("%d 生产 %d\n", i, rn)
+        queue = append(queue, rn)
+        time.Sleep(time.Millisecond * 100)
+
+        // 唤醒消费者
+        condC.Broadcast()
+        mutex.Unlock()
+	}
+}
+
+func main() {
+	for i := 1; i <= 5; i++ {
+		go producer(i)
+	}
+	for i := 6; i <= 10; i++ {
+		go consumer(i)
+	}
+	time.Sleep(time.Minute * 2)
+}
+```
+
+条件变量、等待唤醒、依赖持有锁(同意把)保证同步性、一致性
+用于线程（Goroutine）间的同步和协调，适用于生产者-消费者模型或等待某个条件满足的场景。Cond依赖于互斥锁（Mutex）或读写锁（RWMutex）来实现线程安全
+
+同一把锁、不同的条件变量
 
 
 #### Pool
@@ -1373,3 +1505,409 @@ Context上下文树
 
 
 ## 设计模式
+
+
+### 单例模式
+```go
+type Singleton struct{}
+
+var instance *Singleton
+var once sync.Once
+
+// GetInstance 返回单例对象
+func GetInstance() *Singleton {
+	once.Do(func() {
+		instance = &Singleton{}
+	})
+	return instance
+}
+```
+
+`sync.Once`懒汉式创建
+
+
+### 工厂模式
+```go
+// 简单工厂模式
+// Logger 接口
+type Logger interface {
+	Log(message string)
+}
+
+// ConsoleLogger 具体实现
+type ConsoleLogger struct{}
+
+func (c ConsoleLogger) Log(message string) {
+	fmt.Println("Console:", message)
+}
+
+// FileLogger 具体实现
+type FileLogger struct{}
+
+func (f FileLogger) Log(message string) {
+	fmt.Println("File:", message)
+}
+
+// LoggerFactory 工厂方法
+func LoggerFactory(loggerType string) Logger {
+	switch loggerType {
+	case "console":
+		return ConsoleLogger{}
+	case "file":
+		return FileLogger{}
+	default:
+		return nil
+	}
+}
+```
+
+
+### 适配器模式
+```go
+// 目标接口
+type Database interface {
+	Query(sql string) string
+}
+
+// MySQL 适配器
+type MySQL struct{}
+
+func (m *MySQL) Query(sql string) string {
+	return "MySQL: " + sql
+}
+
+// PostgreSQL 适配器
+type PostgreSQL struct{}
+
+func (p *PostgreSQL) Query(sql string) string {
+	return "PostgreSQL: " + sql
+}
+
+// 统一使用适配器
+func ExecuteQuery(db Database, sql string) {
+	fmt.Println(db.Query(sql))
+}
+```
+
+
+### 装饰器模式
+```go
+// Logger 基础接口
+type Logger interface {
+	Log(message string)
+}
+
+// BasicLogger 基本日志实现
+type BasicLogger struct{}
+
+func (b BasicLogger) Log(message string) {
+	fmt.Println("Log:", message)
+}
+
+// TimestampLogger 装饰器（添加时间）
+type TimestampLogger struct {
+	Logger
+}
+
+// 方法装饰实现，持有对象调用
+func (t TimestampLogger) Log(message string) {
+	fmt.Print("[Timestamp] ")
+	t.Logger.Log(message)
+}
+
+timestampLogger := TimestampLogger{Logger: logger}
+timestampLogger.Log("Something went wrong!")
+```
+
+
+
+### 观察者模式
+```go
+// 观察者接口
+type Observer interface {
+	Update(event string)
+}
+
+// 具体观察者
+type User struct {
+	Name string
+}
+
+func (u *User) Update(event string) {
+	fmt.Println(u.Name, "收到通知:", event)
+}
+
+// 事件发布者
+type EventPublisher struct {
+	observers []Observer
+}
+
+func (p *EventPublisher) Subscribe(o Observer) {
+	p.observers = append(p.observers, o)
+}
+
+func (p *EventPublisher) Notify(event string) {
+	for _, observer := range p.observers {
+		observer.Update(event)
+	}
+}
+
+
+publisher := &EventPublisher{}
+
+user1 := &User{Name: "Alice"}
+user2 := &User{Name: "Bob"}
+
+publisher.Subscribe(user1)
+publisher.Subscribe(user2)
+
+publisher.Notify("Go 1.22 发布了！")
+```
+
+
+### 策略模式
+```go
+// PaymentStrategy 支付接口
+type PaymentStrategy interface {
+	Pay(amount float64)
+}
+
+// 支付宝支付
+type AliPay struct{}
+
+func (a *AliPay) Pay(amount float64) {
+	fmt.Println("使用支付宝支付:", amount)
+}
+
+// 微信支付
+type WeChatPay struct{}
+
+func (w *WeChatPay) Pay(amount float64) {
+	fmt.Println("使用微信支付:", amount)
+}
+
+// 订单
+type Order struct {
+	Payment PaymentStrategy
+}
+
+func (o *Order) Checkout(amount float64) {
+	o.Payment.Pay(amount)
+}
+
+order1 := &Order{Payment: &AliPay{}}
+order1.Checkout(100)
+
+order2 := &Order{Payment: &WeChatPay{}}
+order2.Checkout(200)
+```
+
+
+和适配器模式一样，持有具体执行对象，只是语义不同
+
+### 原型模式
+
+Clone对象复制
+
+
+### 建造者模式
+```go
+// User 复杂对象
+type User struct {
+	Name  string
+	Age   int
+	Email string
+}
+
+// UserBuilder 建造者
+type UserBuilder struct {
+	user *User
+}
+
+func NewUserBuilder() *UserBuilder {
+	return &UserBuilder{user: &User{}}
+}
+
+func (b *UserBuilder) SetName(name string) *UserBuilder {
+	b.user.Name = name
+	return b
+}
+
+func (b *UserBuilder) SetAge(age int) *UserBuilder {
+	b.user.Age = age
+	return b
+}
+
+func (b *UserBuilder) SetEmail(email string) *UserBuilder {
+	b.user.Email = email
+	return b
+}
+
+func (b *UserBuilder) Build() *User {
+	return b.user
+}
+
+user := NewUserBuilder().
+    SetName("Alice").
+    SetAge(25).
+    SetEmail("alice@example.com").
+    Build()
+```
+
+Builder链式构造
+
+
+### 命令模式
+```go
+
+// 命令接口
+type Command interface {
+	Execute()
+}
+
+// 具体命令（打开电视）
+type TV struct{}
+
+func (t *TV) On() {
+	fmt.Println("电视已打开")
+}
+
+type TVOnCommand struct {
+	tv *TV
+}
+
+func (c *TVOnCommand) Execute() {
+	c.tv.On()
+}
+
+// 遥控器
+type RemoteControl struct {
+	command Command
+}
+
+func (r *RemoteControl) SetCommand(command Command) {
+	r.command = command
+}
+
+func (r *RemoteControl) PressButton() {
+	r.command.Execute()
+}
+
+tv := &TV{}
+onCommand := &TVOnCommand{tv: tv}
+
+remote := &RemoteControl{}
+remote.SetCommand(onCommand)
+remote.PressButton() // 电视已打开
+```
+
+
+基于中间接口，连接两个对象的操作
+类似适配器模式
+
+
+
+### 责任链模式
+```go
+// 处理器接口
+type Handler interface {
+	SetNext(handler Handler)
+	Handle(request string)
+}
+
+// 具体处理器
+type AuthHandler struct {
+	next Handler
+}
+
+func (h *AuthHandler) SetNext(next Handler) {
+	h.next = next
+}
+
+func (h *AuthHandler) Handle(request string) {
+	if request == "invalid" {
+		fmt.Println("认证失败")
+		return
+	}
+	fmt.Println("认证成功")
+	if h.next != nil {
+		h.next.Handle(request)
+	}
+}
+
+// 日志处理器
+type LogHandler struct {
+	next Handler
+}
+
+func (h *LogHandler) SetNext(next Handler) {
+	h.next = next
+}
+
+func (h *LogHandler) Handle(request string) {
+	fmt.Println("记录日志:", request)
+	if h.next != nil {
+		h.next.Handle(request)
+	}
+}
+
+func main() {
+	auth := &AuthHandler{}
+	log := &LogHandler{}
+
+	auth.SetNext(log) // 先认证，再记录日志
+
+	auth.Handle("valid")   // 认证成功 -> 记录日志
+	auth.Handle("invalid") // 认证失败
+}
+```
+
+
+### 状态模式
+```go
+
+// 状态接口
+type OrderState interface {
+	Handle(order *Order)
+}
+
+// 具体状态：待支付
+type PendingState struct{}
+
+func (p *PendingState) Handle(order *Order) {
+	fmt.Println("订单未支付")
+	order.SetState(&PaidState{})
+}
+
+// 具体状态：已支付
+type PaidState struct{}
+
+func (p *PaidState) Handle(order *Order) {
+	fmt.Println("订单已支付")
+}
+
+// 订单结构
+type Order struct {
+	state OrderState
+}
+
+func (o *Order) SetState(state OrderState) {
+	o.state = state
+}
+
+func (o *Order) Process() {
+	o.state.Handle(o)
+}
+
+order := &Order{state: &PendingState{}}
+order.Process() // 订单未支付
+order.Process() // 订单已支付
+```
+
+小型状态机
+
+
+
+### 访问者模式
+```go
+```
