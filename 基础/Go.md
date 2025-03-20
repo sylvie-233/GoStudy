@@ -316,7 +316,7 @@ std:
         buildinfo:
         elf:
         pe:
-    embed:
+    embed: # 内嵌
     encoding: # 编解码
         base64: # Base64
             StdEncoding:
