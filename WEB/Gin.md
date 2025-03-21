@@ -8,6 +8,7 @@
 
 go web轻量级框架`github.com/gin-gonic/gin`
 默认端口：8080
+类似nodejs的koa框架
 
 
 
@@ -97,13 +98,31 @@ gin:
         LoadHTMLFiles(): # 加载静态文件
         LoadHTMLGlob(): # 匹配加载所有模板文件
         Run(): # server服务运行
+        ServeHTTP(): # 响应输出到Writer中
         SetFuncMap(): # 注册模板函数
         SetHTMLTemplate():
         Static(): # 静态文件目录挂载
         StaticFile():
         StaticFS():
         Use(): # 注册中间件
-    Group: # 路由分组（子路由）
+    Error:
+    H: # map[string]any 字典（帮助快速创建字典）
+    HandlerFunc: # 路由处理函数
+    HandlersChain:
+    LogFormatter:
+    LogFormatterParams: # gin内置日志格式化参数（自定义）
+        ClientIP:
+        ErrorMessage:
+        Latency:
+        Method:
+        Path:
+        Request:
+        StatusCode:
+        TimeStamp:
+    LoggerConfig:
+    Params:
+    ResponseWriter:
+    RouterGroup: # 路由分组（子路由）
         ANY():
         DELETE():
         GET():
@@ -114,22 +133,14 @@ gin:
         POST(): # POST请求处理
         PUT():
         Use(): # 注册中间件
-    H: # map[string]any 字典（帮助快速创建字典）
-    HandlerFunc: # 路由处理函数
-    LogFormatterParams: # gin内置日志格式化参数（自定义）
-        ClientIP:
-        ErrorMessage:
-        Latency:
-        Method:
-        Path:
-        Request:
-        StatusCode:
-        TimeStamp:
     BasicAuth(): # gin 内置认证中间件
     Default(): # 默认路由引擎(Logger and Recovery middleware)
     Delims(): # 模板语法分隔符
+    Dir():
+    DisableBindValidation():
     DisableConsoleColor():
     ForceConsoleColor():
+    IsDebugging():
     LoggerWithFormatter():
     New(): # 新建路由引擎
     Recovery(): # gin 内置异常处理中间件
@@ -145,13 +156,11 @@ validator: #
 
 ### 路由
 
-#### 请求
-
-
-#### 响应
-
 
 #### 上下文
+
+
+`gin.Context`上下文，存储请求响应
 
 
 
@@ -181,14 +190,17 @@ func Logger() gin.HandlerFunc {
 }
 ```
 
-
-#### JWT
-
-
-#### CORS
+### 参数绑定
 
 
-### ORM
+
+### 参数校验
+
+
+
+
+
+### 异常处理
 
 
 
@@ -198,22 +210,47 @@ gin使用go内置模板引擎
 
 
 
-### 配置文件
+### 日志
 
 
-### 异常处理
+
+### 异步任务
+
+简单使用Goruntine协程即可实现
 
 
-### 参数绑定
 
-`ctx.ShouldBindJson(&obj)`
-
-tags:
-- form
+### 认证权限
 
 
-### 热重载
+
+### 缓存
 
 
-## 项目实战
+
+### ORM
+
+
+### WebSocket 
+
+### GraphQL
+
+### gRPC
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
