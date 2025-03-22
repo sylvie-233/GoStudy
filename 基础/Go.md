@@ -2,7 +2,7 @@
 
 `go官方文档：https://golang.google.cn/doc/`
 `Go by Example文档：https://gobyexample.com/multiple-return-values`
-
+`Go Web 编程快速入门：P21`
 
 ## 基础介绍
 
@@ -184,6 +184,7 @@ std:
         int64:
         map:
             Add():
+            Get():
             Set():
         nil: # 空值
         rune: # int32字符
@@ -292,23 +293,36 @@ std:
             Sum256():
     database: # 数据库
         sql:
+            ColumnType:
             Conn:
             Db: # 数据库连接
                 Close():
-                Exec(): # 执行sql，返回Result
+                Exec(): # 执行非查询sql，返回Result
+                PingContext():
+                Prepare():
                 Query(): # 执行查询sql，返回Rows
-                QueryRow():
+                QueryContext():
+                QueryRow(): # 执行查询sql，返回Row
+                QueryRowContext():
                 SetMaxOpenConns():
             Driver:
-            Result: # ddl操作结果
+            Result: # sql操作结果
                 LastInsertId():
                 RowsAffected():
-            Rows: # sql查询结果
+            Row: # 一条数据
+                Scan():
+            Rows: # sql查询结果，迭代遍历
                 Close():
+                Columns(): # 获取所有列名
+                ColumnTypes():
                 Err(): # 异常
                 Next(): # 结果迭代
+                NextResultSet(): # 结果迭代
                 Scan(): # 值扫描输入
-            Tx:
+            Stmt: # 预处理sql，可复用
+                Close():
+                QueryRow():
+            Tx: # 事务
             Named(): # sql具名参数
             Open(): # 打开数据库连接
             Register(): # 注册数据库驱动
@@ -401,12 +415,16 @@ std:
             Sum():
     html:
         template: # html模板引擎
+            FuncMap: # 过滤器函数map
             Template: # HTML模板
                 Execute(): # 传递模板数据，并执行解析
                 ExecuteTemplate(): # 模板渲染输出
+                Funcs(): # 注册过滤器函数
+                Lookup():
                 Parse(): # 解析字符串
                 ParseFiles(): # 解析文件
                 ParseGlob():
+            Must():
             New(): # 新建模板
         EscapeString(): # 转义 HTML
         UnescapeString(): # 反转义 HTML
@@ -418,7 +436,9 @@ std:
         png:
     index:
     io: # 输入、输出
-        fs:
+        fs: # 文件系统
+            DirEntry:
+            FS:
         ioutil: # （过时）io工具包
             ReadAll():
                 ---
@@ -520,35 +540,77 @@ std:
             Client: # 请求客户端
                 Timeout:
                 Do(): # 发起请求Request
+            Cookie:
+            CookieJar:
+            DefaultServeMux: # 默认路由器Handler
+            Dir:
+            File:
+            FileSystem: # 文件系统
+                Open():
+            Handler: # 路由器接口，可与第三方集成，默认DefaultServeMux
+                ServeHTTP():
+            HandlerFunc:
+            Header:
             Request: # 请求对象
-                Body:
-                Header:
+                Body: # 请求体
+                ContentLength: # 内容长度
+                Form: # form表单
+                Header: # 请求头 map[string][]string
+                    Get():
+                Jar:
+                Method:
+                MultipartForm: # multipart表单
+                    File:
+                PostForm:
+                Proto:
+                Transport:
+                URL: # url.URL
+                    Fragment:
+                    RawQuery:
+                    Query(): # 返回 query string 的 map
+                FormFile():
+                FormValue():
+                ParseForm(): # 解析表单
+                ParseMultipartForm(): # 解析multipart表单
+                PostFormValue():
             Response: # 响应对象
                 Body: # 响应体
                     Close():
                 ContentLength:
+                Header:
+                Request:
                 Status:
                 StatusCode:
-            ResponseWrite:
-                Header():
-                Write():
-            Server:
+            ResponseWrite: # 响应输出
+                Header(): # 响应头
+                Write(): # 响应输出 字节切片
+                WriteHeader():
+            Server: # http 服务类
                 Addr:
                 Handler:
+                ListenAndServe(): # 监听服务
+                Serve():
                 Shutdown():
+            StatusNotFound:
             StatusOK:
+            Transport:
+            Dir():
+            FileServer():
             Get(): # get请求
+            Handle(): # 挂载路由Handler
+            HandleFunc(): # 挂载路由处理函数
             ListenAndServe(): # 监听服务
             NewRequest(): # 新建请求
             Post():
             PostForm():
+            ServeFile(): # 响应文件
         mail:
         netip:
         rpc:
         smtp:
         textproto:
         url: # URL
-            URL:
+            URL: # 请求链接
                 Host:
                 Path:
                 RawQuery:
@@ -556,9 +618,9 @@ std:
                 Port():
                 Query():
                 String():
-            Values:
+            Values: # 结构体 map[string][]string
             Parse():
-        Conn: # 连接对象
+        Conn: # 网络连接
             Close(): # 关闭连接
             Read(): # 读取字节数据
             RemoteAddr():
@@ -813,10 +875,10 @@ std:
             Signal(): # 随机唤醒一个等待的goroutine
             Wait(): # 等待唤醒，释放锁，被唤醒后直接持有锁
         Map: # 并发安全Map
-            Delete():
+            Delete(): # 删除k
             Load():
             Range(): # k-v 遍历
-            Store():
+            Store(): # 存储k-v
         Mutex: # 互斥锁
             Lock():
             Unlock():
@@ -855,9 +917,11 @@ std:
     text:
         scanner:
         template: # 内置模板引擎 
-            New():
+            Template:
                 Execute(): # 模板上下文数据传递
                 Parse(): # 模板解析
+                ParseFiles():
+            New():
         tabwriter:
             parse():
     time: # 时间
@@ -1145,13 +1209,23 @@ select需结合break标签才能跳出外层循环
 ```yaml
 html/template:
     {{ xxx }}: # 变量使用
-        template:
-        define ... end:
+        template: # 引入其它模板，可传参
+        block ... end: # 同template，引入其它模板，可有默认值
+        define ... end: # 定义模板别名，可被template指令引入
+        if ... else ... end:
+            eq:
+        range ... else ... end:
+        with ... end:
+    filters: # 内置过滤器函数
+        index:
+        len:
+        printf:
 ```
 - text/template
 - html/template
 
 内置页面模板引擎
+支持管道
 
 
 
