@@ -2,7 +2,7 @@
 
 `go官方文档：https://golang.google.cn/doc/`
 `Go by Example文档：https://gobyexample.com/multiple-return-values`
-`Go Web 编程快速入门：P21`
+
 
 ## 基础介绍
 
@@ -115,7 +115,7 @@ go:
         nm:
         objdump:
         pack:
-        pprof:  
+        pprof: # 性能监控
         trace:
         vet:
     version: # go版本
@@ -343,9 +343,9 @@ std:
             _tag:
                 json:
                     omitempty:
-            Decoder:
+            Decoder: # 解码器
                 Decode():
-            Encoder:
+            Encoder: # 编码器
                 Encode():
             Marshal(): # json序列化
             MarshalIndent():
@@ -537,6 +537,13 @@ std:
         TypeByExtension():
     net: # 网络
         http: # HTTP
+            httptest:
+                ResponseRecorder: # 响应结果记录，同ResponseWrite
+                    Result(): # 获取 http.Response
+                Server:
+                NewRecorder():
+                NewRequest():
+            pprof: # http 性能监控
             Client: # 请求客户端
                 Timeout:
                 Do(): # 发起请求Request
@@ -551,6 +558,7 @@ std:
                 ServeHTTP():
             HandlerFunc:
             Header:
+            Pusher:
             Request: # 请求对象
                 Body: # 请求体
                 ContentLength: # 内容长度
@@ -573,6 +581,7 @@ std:
                 ParseForm(): # 解析表单
                 ParseMultipartForm(): # 解析multipart表单
                 PostFormValue():
+                WithContext():
             Response: # 响应对象
                 Body: # 响应体
                     Close():
@@ -600,6 +609,7 @@ std:
             Handle(): # 挂载路由Handler
             HandleFunc(): # 挂载路由处理函数
             ListenAndServe(): # 监听服务
+            ListenAndServeTLS(): # 监听服务
             NewRequest(): # 新建请求
             Post():
             PostForm():
