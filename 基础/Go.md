@@ -1,7 +1,7 @@
 # Go
 
 `go官方文档：https://golang.google.cn/doc/`
-`Go by Example文档：https://gobyexample.com/multiple-return-values`
+`Go by Example文档：https://gobyexample.com/generics`
 
 
 ## 基础介绍
@@ -27,6 +27,15 @@ mingw安装：`https://sourceforge.net/projects/mingw/`
 - os.File
 - net.Conn
 - bufio.Reader/Writer
+
+
+内置可range对象：
+- string
+- array
+- slice
+- map
+- channel
+
 
 
 ### 安装目录
@@ -330,7 +339,10 @@ std:
         buildinfo:
         elf:
         pe:
-    embed: # 内嵌
+    embed: # 文件内嵌
+        FS: # 文件系统
+            Open():
+            ReadFile():
     encoding: # 编解码
         base64: # Base64
             StdEncoding:
@@ -372,6 +384,8 @@ std:
         StringVar(): # 参数绑定
         Var():
     fmt: # 格式化
+        Stringer:
+            String():
         Errorf(): # 异常格式化
         Fprint(): # 文件内容写入
         Fprintf():
@@ -963,6 +977,10 @@ std:
         Sleep(): # 线程睡眠
         Tick(): # 定时器执行 channel
         Unix():
+    unicode:
+        utf8:
+            DecodeRuneInString():
+            RuneCountInString():
     unique:
     unsafe: # 不安全操作，底层操作
         Sizeof(): # 获取变量内存大小
@@ -981,6 +999,7 @@ types:
     int:
     int64:
     nil:
+    rune:
     string:
     uint64:
 ```
@@ -990,6 +1009,14 @@ types:
 `.(T)`：类型断言，常用于类型判断
 `const itoa`：定义常量枚举（0开始）
 
+
+#### Rune
+```go
+var ch rune = 'A'
+```
+
+
+rune实际上是 int32 类型的别名，它是用来存储字符编码的整数值
 
 
 
@@ -1017,6 +1044,8 @@ byteArr := []byte(str)
 值传递、不可变
 支持加号`+`拼接
 
+String遍历range，获取字节偏移和rune字符
+
 
 #### Pointers
 ```go
@@ -1034,6 +1063,8 @@ fmt.Println(*p) // 输出: 58
 指针`&`、`*T`、值传递
 
 `nil`空指针
+
+对于结构体调用方法而言，指针仅仅是可不可修改成员变量的区别
 
 
 
@@ -1149,6 +1180,40 @@ for...range.. 遍历channel
 select 多路复用channel
 
 
+#### Enum
+```go
+// 定义枚举别名
+type ServerState int
+
+// 定义枚举值
+const (
+    StateIdle ServerState = iota
+    StateConnected
+    StateError
+    StateRetrying
+)
+
+// 定义枚举字面量
+var stateName = map[ServerState]string{
+    StateIdle:      "idle",
+    StateConnected: "connected",
+    StateError:     "error",
+    StateRetrying:  "retrying",
+}
+
+// 通过枚举值获取枚举字面量
+func (ss ServerState) String() string {
+    return stateName[ss]
+}
+```
+
+
+没有内置的Enum类型，通过const常量实现
+
+
+
+
+
 ### Control Flow
 ```yaml
 Control Flow:
@@ -1238,6 +1303,17 @@ html/template:
 支持管道
 
 
+#### Embed
+```go
+//go:embed hello.txt
+var content string
+
+fmt.Println(content) // 输出：Hello, World!
+```
+
+
+
+embed允许将文件（如文本文件、二进制文件、HTML 文件等）嵌入到 Go 程序的可执行文件中，简化了程序中对静态资源的处理
 
 
 
@@ -1266,12 +1342,24 @@ func divide(a, b float64) (quotient float64, err error) {
 
 - 支持多返回值、返回值命名
 - 匿名函数、闭包
-- 可变参数`...T`
+- 可变参数`...T`，可range遍历
 
 
 #### Defer
 
 延迟执行函数
+return执行之前
+
+
+
+
+#### Closure
+```go
+
+```
+
+闭包、匿名函数
+
 
 #### Generics
 ```go
@@ -1282,7 +1370,9 @@ func Print[T any](value T) {
 ```
 泛型函数
 
-支持泛型参数约束、
+支持泛型参数约束：&、|、~、
+- any：interface{}
+- comparable: 可比较
 
 
 ### Struct
@@ -1381,7 +1471,7 @@ type Stringer[T any] interface {
 
 #### Tag
 
-
+反引号标签``
 
 
 #### Reflect
@@ -1425,6 +1515,8 @@ fmt.Println(c.Get()) // 42
 
 `~`: 匹配类型及其别名
 `|`: 联合类型
+
+
 
 
 
