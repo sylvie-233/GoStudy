@@ -2,7 +2,7 @@
 
 `go官方文档：https://golang.google.cn/doc/`
 `Go by Example文档：https://gobyexample.com/generics`
-`8小时入门go语言开发|2023重制版: P6`
+`8小时入门go语言开发|2023vi制版: P12`
 
 
 ## 基础介绍
@@ -857,11 +857,11 @@ std:
         Float64s():
         Ints(): # 整数切片排序
         IsSorted():
-        Reverse():
+        Reverse(): # 反转
         Search(): # 查找
         SearchInts():
         Slice(): # 切片排序
-        Sort():
+        Sort(): # 排序
         Strings(): # 字符串切片排序
     strconv: # 字符串转换
         Itoa():
@@ -1230,7 +1230,7 @@ Control Flow:
     var: # 变量声明(函数内为局部变量)
     defer ...: # 延迟处理（在return之后）
     for: # 普通for循环，支持while、死循环实现
-    for ... range ...: # 迭代遍历、带索引
+    for ... range ...: # 迭代遍历、带索引，可遍历map
     go ...: # goroutine
     if ... else if ... else ...:
     loop ...:
