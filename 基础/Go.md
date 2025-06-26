@@ -2,6 +2,7 @@
 
 `go官方文档：https://golang.google.cn/doc/`
 `Go by Example文档：https://gobyexample.com/generics`
+`8小时入门go语言开发|2023重制版: P6`
 
 
 ## 基础介绍
@@ -105,7 +106,7 @@ go:
         vendor: # 导出所有依赖到vendor目录
         verify: # 校验模块
         why:
-    run: # 运行
+    run: # 运行go代码（依赖main主函数）
     test: # 运行测试用例
         -bench: # 基准测试
         -count:
@@ -255,7 +256,7 @@ std:
         Trim():
         TrimFunc():
     cmp:
-    compress:
+    compress: # 压缩
         bzip2:
         gzip:
         zlib:
@@ -410,7 +411,7 @@ std:
                 -: # 左对齐
                 0: # 0填充
         Println(): # 打印换行
-        Scan():
+        Scan(): # 输入
         Scanf(): # 格式化输入
         Scanln(): # 输入一行
         Sprint():
@@ -427,7 +428,7 @@ std:
         crc64:
         Hash: # 哈希
             Sum():
-    html:
+    html: # HTML
         template: # html模板引擎
             FuncMap: # 过滤器函数map
             Template: # HTML模板
@@ -442,7 +443,7 @@ std:
             New(): # 新建模板
         EscapeString(): # 转义 HTML
         UnescapeString(): # 反转义 HTML
-    image:
+    image: # 图片
         color:
         draw:
         gif:
@@ -542,7 +543,7 @@ std:
         Max():
         Min():
         Mod():
-        Pow():
+        Pow(): # 幂运算
         Sqrt():
         Trunc():
     mime: # 多媒体类型
@@ -938,7 +939,7 @@ std:
             Parallel(): # 并行测试
             Run(): # 运行子测试
             Skip(): # 跳过测试
-    text:
+    text: # 文本处理
         scanner:
         template: # 内置模板引擎 
             Template:
@@ -993,14 +994,18 @@ std:
 ### Data Types
 ```yaml
 types:
-    bool:
-    byte: # 字节
-    fload64: # 浮点数默认
+    bool: # 布尔 true|false
+    byte: # 字节（uint8）
+    float32:
+    float64: # 浮点数默认
     int:
+    int8:
+    int16:
     int64:
-    nil:
-    rune:
-    string:
+    nil: # 空类型
+    rune: # 多字节字符
+    string: # 字符串
+    uint8:
     uint64:
 ```
 
@@ -1015,7 +1020,7 @@ types:
 var ch rune = 'A'
 ```
 
-
+字符单引号、字符串双引号
 rune实际上是 int32 类型的别名，它是用来存储字符编码的整数值
 
 
@@ -1045,6 +1050,7 @@ byteArr := []byte(str)
 支持加号`+`拼接
 
 String遍历range，获取字节偏移和rune字符
+使用`text/template`实现字符串模板
 
 
 #### Pointers
@@ -1220,7 +1226,8 @@ Control Flow:
     :=: # 初始化声明语句
     const: # 常量声明
     nil: # 空值
-    var: # 变量声明
+    type: # 类型声明、别名
+    var: # 变量声明(函数内为局部变量)
     defer ...: # 延迟处理（在return之后）
     for: # 普通for循环，支持while、死循环实现
     for ... range ...: # 迭代遍历、带索引
