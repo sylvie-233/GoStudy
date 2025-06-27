@@ -7,6 +7,17 @@
 
 ## 核心内容
 ```yaml
-gocron:
-
+github.com/go-co-op/gocron:
+    gocron:
+        NewScheduler():
+    Scheduler:
+        Clear():
+        Do():
+        Every():
+            At():
+            Second():
+        Pause():
+        Resume():
+        StartAsync():
+        WithContext():
 ```
