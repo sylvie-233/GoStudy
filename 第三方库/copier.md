@@ -4,7 +4,7 @@
 
 ## 基础介绍
 
-结构体拷贝库
+结构体字段拷贝库
 `github.com/jinzhu/copier`
 
 
@@ -13,6 +13,6 @@
 copier:
     Option: # 拷贝配置
         IgnoreEmpty:
-    Copy():
+    Copy(): # 字段拷贝
     CopyWithOption():
 ```

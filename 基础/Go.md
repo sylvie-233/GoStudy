@@ -2,7 +2,7 @@
 
 `go官方文档：https://golang.google.cn/doc/`
 `Go by Example文档：https://gobyexample.com/generics`
-`8小时入门go语言开发|2023重制版: P6`
+`8小时入门go语言开发|2023重制版: P14`
 
 
 ## 基础介绍
@@ -1354,7 +1354,7 @@ func divide(a, b float64) (quotient float64, err error) {
 
 #### Defer
 
-延迟执行函数
+延迟执行函数、栈结构调用
 return执行之前
 
 
