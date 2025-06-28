@@ -2,7 +2,7 @@
 
 `go官方文档：https://golang.google.cn/doc/`
 `Go by Example文档：https://gobyexample.com/generics`
-`8小时入门go语言开发|2023重制版: P29`
+``
 
 
 ## 基础介绍
@@ -572,7 +572,7 @@ std:
                 Open():
             Handler: # 路由器接口，可与第三方集成，默认DefaultServeMux
                 ServeHTTP():
-            HandlerFunc:
+            HandlerFunc: # 路由处理函数
             Header:
             Pusher:
             Request: # 请求对象
@@ -590,6 +590,7 @@ std:
                 Transport:
                 URL: # url.URL
                     Fragment:
+                    Path:
                     RawQuery:
                     Query(): # 返回 query string 的 map
                 FormFile():
@@ -623,11 +624,11 @@ std:
             FileServer():
             Get(): # get请求
             Handle(): # 挂载路由Handler
-            HandleFunc(): # 挂载路由处理函数
+            HandleFunc(): # 注册、挂载路由处理函数
             ListenAndServe(): # 监听服务
-            ListenAndServeTLS(): # 监听服务
+            ListenAndServeTLS(): # 监听服务TLS
             NewRequest(): # 新建请求
-            Post():
+            Post(): # POST 请求
             PostForm():
             ServeFile(): # 响应文件
         mail:
@@ -646,10 +647,11 @@ std:
                 String():
             Values: # 结构体 map[string][]string
             Parse():
-        Conn: # 网络连接
+        Conn: # 网络连接 Socket
             Close(): # 关闭连接
-            Read(): # 读取字节数据
-            RemoteAddr():
+            LocalAddr():
+            Read(): # 读取字节数据，int
+            RemoteAddr(): # 远程地址
             Write(): # 写入字节数据
         Listener:
             Accept(): # 接收socket连接
@@ -662,10 +664,12 @@ std:
             Close():
             ReadFromUDP():
             WriteToUDP():
-        Dial(): # TCP请求连接
+        Dial(): # TCP请求连接，net.Conn
         DialUDP(): # UDP请求连接
         Listen(): # 端口监听
+        ListenTCP(): # TCP端口监听
         ListenUDP(): # 端口监听
+        ResolveTCPAddr():
     os: # 操作系统相关
         exec: # 命令行
             Command: # 命令类
@@ -763,9 +767,9 @@ std:
         Int32:
         Method: # 字段方法
             Name:
-            Type:
+            Type: # 方法名
             Call(): # 调用方法，需要Value作为参数
-        StructField: # 字段结构
+        StructField: # 字段类型结构
             Name: # 字段名称
             Tag: # 字段标签
                 Get():
@@ -774,29 +778,32 @@ std:
         StructTag: # tag标签
         Type: # 类型
             Elem(): #  获取类型指针所指向的元素类型
-            Field(): # 根据index获取字段
+            Field(): # 根据index获取字段类型
             FieldByName(): # 根据名称查找字段
             Implements(): # 判断接口实现
-            Kind(): # 类型种类
+            Kind(): # 类型常量枚举
             Method(): # 根据index获取方法
             MethodByName():
             Name(): # 类型名
             NumField(): # 字段个数
-            NumMethod():
+            NumMethod(): # 方法个数
         Value: # 值，常传指针
-            Elem(): # 根据指针取值、解引用
+            Elem(): # * 解引用
                 SetBool():
                 SetInt():
                 SetString():
+            Field(): # 根据index获取字段值
             FieldByName():
             Float():
             Int():
             IsNil():
-            Kind(): # 变量类型
+            Kind(): # 类型常量枚举
             MapIndex():
             MethodByName():
             NumField(): # 字段个数
             SetInt():
+            SetString():
+            String():
         TypeOf(): # 获取变量类型Type
         ValueOf(): # 获取变量值Value
     regexp: # 正则表达式(查找、替换、分隔)（索引、字符串、匹配组）
