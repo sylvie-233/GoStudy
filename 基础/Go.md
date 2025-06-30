@@ -74,6 +74,7 @@ mingw安装：`https://sourceforge.net/projects/mingw/`
 go:
     benchmark:
     build: # 构建
+        -o:
         -tags:
     clean:
     doc:
