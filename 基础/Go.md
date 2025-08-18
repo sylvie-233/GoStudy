@@ -2,7 +2,7 @@
 
 `go官方文档：https://golang.google.cn/doc/`
 `Go by Example文档：https://gobyexample.com/generics`
-`8小时入门go语言开发|2023重制版: P14`
+``
 
 
 ## 基础介绍
@@ -74,6 +74,7 @@ mingw安装：`https://sourceforge.net/projects/mingw/`
 go:
     benchmark:
     build: # 构建
+        -o:
         -tags:
     clean:
     doc:
@@ -165,11 +166,11 @@ std:
         Scanner: # 输入扫描
             Err():
             Scan(): # 循环扫描
-            Split():
-            Text(): # 输入的文档
+            Split(): # 设置读取分隔符
+            Text(): # 读入的内容
         ScanBytes:
         ScanRunes:
-        ScanWords:
+        ScanWords: # 按word读取
         SplitFunc:
         Writer:
             Available():
@@ -179,8 +180,8 @@ std:
             Reset():
             Write():
             WriteString():
-        NewScanner():
-        NewReader(): # 新建输入缓冲区
+        NewScanner(): # bufio.Scanner
+        NewReader(): # 新建输入缓冲区 bufio.Reader
         NewWriter():
         Peek(): 
     builtin: # 内置模块
@@ -336,10 +337,11 @@ std:
             Named(): # sql具名参数
             Open(): # 打开数据库连接
             Register(): # 注册数据库驱动
-    debug:
+    debug: # 调试
         buildinfo:
         elf:
         pe:
+        Stack(): # 函数堆栈信息
     embed: # 文件内嵌
         FS: # 文件系统
             Open():
@@ -450,7 +452,7 @@ std:
         jpeg:
         png:
     index:
-    io: # 输入、输出
+    io: # I/O 输入、输出
         fs: # 文件系统
             DirEntry:
             FS:
@@ -571,7 +573,7 @@ std:
                 Open():
             Handler: # 路由器接口，可与第三方集成，默认DefaultServeMux
                 ServeHTTP():
-            HandlerFunc:
+            HandlerFunc: # 路由处理函数
             Header:
             Pusher:
             Request: # 请求对象
@@ -589,6 +591,7 @@ std:
                 Transport:
                 URL: # url.URL
                     Fragment:
+                    Path:
                     RawQuery:
                     Query(): # 返回 query string 的 map
                 FormFile():
@@ -622,11 +625,11 @@ std:
             FileServer():
             Get(): # get请求
             Handle(): # 挂载路由Handler
-            HandleFunc(): # 挂载路由处理函数
+            HandleFunc(): # 注册、挂载路由处理函数
             ListenAndServe(): # 监听服务
-            ListenAndServeTLS(): # 监听服务
+            ListenAndServeTLS(): # 监听服务TLS
             NewRequest(): # 新建请求
-            Post():
+            Post(): # POST 请求
             PostForm():
             ServeFile(): # 响应文件
         mail:
@@ -645,10 +648,11 @@ std:
                 String():
             Values: # 结构体 map[string][]string
             Parse():
-        Conn: # 网络连接
+        Conn: # 网络连接 Socket
             Close(): # 关闭连接
-            Read(): # 读取字节数据
-            RemoteAddr():
+            LocalAddr():
+            Read(): # 读取字节数据，int
+            RemoteAddr(): # 远程地址
             Write(): # 写入字节数据
         Listener:
             Accept(): # 接收socket连接
@@ -661,10 +665,12 @@ std:
             Close():
             ReadFromUDP():
             WriteToUDP():
-        Dial(): # TCP请求连接
+        Dial(): # TCP请求连接，net.Conn
         DialUDP(): # UDP请求连接
         Listen(): # 端口监听
+        ListenTCP(): # TCP端口监听
         ListenUDP(): # 端口监听
+        ResolveTCPAddr():
     os: # 操作系统相关
         exec: # 命令行
             Command: # 命令类
@@ -679,16 +685,17 @@ std:
         user:
         Args: # 命令行参数
         DirEntry: # 文件条目
+            Info(): # 文件信息 FileInfo
             IsDir(): # 判断是否是目录
             Name(): # 文件名
         File: # 文件流对象
             Close(): # 关闭文件
-            Read():
+            Read(): # 读取内容字节
             ReadAt():
             ReadDir(): # 读取所有文件条目 os.DirEntry
             Seek():
             Stat(): # 文件信息
-            Write():
+            Write(): # 写入内容字节
             WriteAt():
             WriteString():
         FileInfo: # 文件信息对象
@@ -712,7 +719,7 @@ std:
         Stdin: # 标准输入
         Stdout: # 标准输出
         O_APPEND:
-        O_CREATE:
+        O_CREATE: # 创建文件标志
         O_RDWR:
         O_TRUNC:
         O_WRONLY:
@@ -735,10 +742,10 @@ std:
         Hostname(): # 主机名
         Mkdir(): # 创建单个目录
         MkdirAll():
-        Open(): # 打开文件
+        Open(): # 打开文件 os.File
         OpenFile():
-        ReadDir(): # 获取所有文件条目
-        ReadFile(): # 获取文件内容、字节数据
+        ReadDir(): # 获取所有文件条目 os.DirEntry
+        ReadFile(): # 获取文件内容 byte[]
         Remove(): # 删除文件
         RemoveAll(): # 删除所有文件
         Rename():
@@ -761,9 +768,9 @@ std:
         Int32:
         Method: # 字段方法
             Name:
-            Type:
+            Type: # 方法名
             Call(): # 调用方法，需要Value作为参数
-        StructField: # 字段结构
+        StructField: # 字段类型结构
             Name: # 字段名称
             Tag: # 字段标签
                 Get():
@@ -772,29 +779,32 @@ std:
         StructTag: # tag标签
         Type: # 类型
             Elem(): #  获取类型指针所指向的元素类型
-            Field(): # 根据index获取字段
+            Field(): # 根据index获取字段类型
             FieldByName(): # 根据名称查找字段
             Implements(): # 判断接口实现
-            Kind(): # 类型种类
+            Kind(): # 类型常量枚举
             Method(): # 根据index获取方法
             MethodByName():
             Name(): # 类型名
             NumField(): # 字段个数
-            NumMethod():
+            NumMethod(): # 方法个数
         Value: # 值，常传指针
-            Elem(): # 根据指针取值、解引用
+            Elem(): # * 解引用
                 SetBool():
                 SetInt():
                 SetString():
+            Field(): # 根据index获取字段值
             FieldByName():
             Float():
             Int():
             IsNil():
-            Kind(): # 变量类型
+            Kind(): # 类型常量枚举
             MapIndex():
             MethodByName():
             NumField(): # 字段个数
             SetInt():
+            SetString():
+            String():
         TypeOf(): # 获取变量类型Type
         ValueOf(): # 获取变量值Value
     regexp: # 正则表达式(查找、替换、分隔)（索引、字符串、匹配组）
@@ -925,6 +935,7 @@ std:
         NewCond(): # 新建条件变量，传入锁
     syscall: # 系统调用
         js:
+        O_RDONLY:
         SIGINT:
         SIGKILL:
     testing: # 测试
@@ -932,12 +943,15 @@ std:
         iotest:
         quick:
         slogtest:
-        T: # 结果记录
+        M: # 测试主入口 TestMain
+            Run():    
+        T: # 测试用例
             Errorf():
             Fatal():
             Log():
+            Logf():
             Parallel(): # 并行测试
-            Run(): # 运行子测试
+            Run(): # 运行子测试，可包含名称（可手动构建参数化测试）
             Skip(): # 跳过测试
     text: # 文本处理
         scanner:
@@ -975,6 +989,7 @@ std:
         Now(): # 当前时间
         Parse(): # 日期时间解析(Time): 2006-01-02 15:04:05
         ParseInLocation():
+        Since(): # 计算duration
         Sleep(): # 线程睡眠
         Tick(): # 定时器执行 channel
         Unix():
@@ -1007,6 +1022,9 @@ types:
     string: # 字符串
     uint8:
     uint64:
+    ---
+    any: # interface{}
+    error:
 ```
 
 `var`定义变量、`const`定义常量
@@ -1224,6 +1242,8 @@ func (ss ServerState) String() string {
 ```yaml
 Control Flow:
     :=: # 初始化声明语句
+    .(): # 类型断言
+        type: # 获取变量类型
     const: # 常量声明
     nil: # 空值
     type: # 类型声明、别名
@@ -1472,7 +1492,7 @@ type Stringer[T any] interface {
 接口指针持有真实类型的引用
 
 
-万能接口：`interface{}`
+万能接口：`interface{}`，即typescript中的any对象
 
 
 
@@ -1539,7 +1559,7 @@ package定义包、主执行包`main`
 ##### init()
 
 `init()`：包初始化函数
-常用于数据库驱动注册
+常用于数据库驱动注册，可配置多
 
 
 
