@@ -63,7 +63,50 @@ goctl:
 
 微服务代码生成工具
 
+#### api
+```yaml
+.api:
+    syntax: # 语法版本
+        v1:
+    info: # api信息
+        desc:
+        title:
+        version:
+    type: # 消息定义
+        string:
+    @server:
+        group:
+        jwt:
+        maxBytes:
+        middleware:
+        prefix:
+        timeout:
+    service: # 服务定义
+        @handler: # 方法名定义
+        get: # 请求定义
+        post:
+            returns:
+```
+go-zero特殊格式文件
 
+
+
+#### proto
+```yaml
+.proto:
+    syntax:
+        proto3:
+    package:
+    option:
+        go_package:
+    import: # 导入其它proto
+    enum: # 枚举定义
+    message: # 消息定义
+    service: # 服务定义
+        rpc: # 方法定义
+            stream: # 流式
+            returns:
+```
 
 
 
@@ -115,47 +158,3 @@ go-zero:
 ```
 
 
-### api
-```yaml
-.api:
-    syntax: # 语法版本
-        v1:
-    info: # api信息
-        desc:
-        title:
-        version:
-    type: # 消息定义
-        string:
-    @server:
-        group:
-        jwt:
-        maxBytes:
-        middleware:
-        prefix:
-        timeout:
-    service: # 服务定义
-        @handler: # 方法名定义
-        get: # 请求定义
-        post:
-            returns:
-```
-go-zero特殊格式文件
-
-
-
-### proto
-```yaml
-.proto:
-    syntax:
-        proto3:
-    package:
-    option:
-        go_package:
-    import: # 导入其它proto
-    enum: # 枚举定义
-    message: # 消息定义
-    service: # 服务定义
-        rpc: # 方法定义
-            stream: # 流式
-            returns:
-```
