@@ -2,7 +2,7 @@
 
 `go官方文档：https://golang.google.cn/doc/`
 `Go by Example文档：https://gobyexample.com/generics`
-``
+`2万多买的Go语言（golang）教程全套：P1`
 
 
 ## 基础介绍
