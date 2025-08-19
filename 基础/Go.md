@@ -1,8 +1,8 @@
 # Go
 
 `go官方文档：https://golang.google.cn/doc/`
-`Go by Example文档：https://gobyexample.com/generics`
-`2万多买的Go语言（golang）教程全套：P32`
+`Go by Example文档：https://gobyexample.com/for`
+`2万多买的Go语言（golang）教程全套：P43`
 
 
 ## 基础介绍
@@ -572,6 +572,7 @@ std:
         Min():
         Mod():
         Pow(): # 幂运算
+        Sin(): # 正弦
         Sqrt():
         Trunc():
     mime: # 多媒体类型
