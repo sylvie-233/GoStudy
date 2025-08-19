@@ -152,6 +152,17 @@ gin:
     Recovery(): # gin 内置异常处理中间件
     SetMode(): # 设置开发模式
 
+gin-contrib: # 官方维护中间件合集
+    cors:
+    logger:
+    prometheus:
+    requestid:
+    secure:
+    sessions:
+        cookie:
+    static:
+    timeout:
+
 validator: # 
     FieldLevel:
         Field():

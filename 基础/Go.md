@@ -2,7 +2,7 @@
 
 `go官方文档：https://golang.google.cn/doc/`
 `Go by Example文档：https://gobyexample.com/generics`
-`2万多买的Go语言（golang）教程全套：P1`
+`2万多买的Go语言（golang）教程全套：P32`
 
 
 ## 基础介绍
@@ -134,6 +134,16 @@ go:
 
 go命令行
 
+#### gofmt
+```yaml
+gofmt:
+    -w:
+```
+
+
+go 代码格式化命令
+
+
 
 #### go.mod
 ```yaml
@@ -152,9 +162,10 @@ go.mod:
 ## 核心内容
 ```yaml
 std:
-    archive:
+    archive: # 压缩
         tar:
         zip:
+            NewWriter():
     bufio: # 输入、输出缓冲
         Reader: # 输入缓冲区
             Read():
@@ -398,10 +409,13 @@ std:
         Fscanln():
         Print():
         Printf(): # 格式化输出
+            %%: # 百分号%
             %b: # 二进制
+            %c: # 字符
             %d: # 十进制数字
             %e: # 科学计数法
             %f: # 浮点数
+            %q: # 带双引号的value值
             %s: # 字符串
             %t: # 布尔字面量
             %v: # 输出值
@@ -412,6 +426,7 @@ std:
                 width.precision: # 宽度.精度
                 -: # 左对齐
                 0: # 0填充
+            %X: # 大写的十六进制
         Println(): # 打印换行
         Scan(): # 输入
         Scanf(): # 格式化输入
@@ -527,8 +542,19 @@ std:
         Map(): # 映射转换
         Values(): # 获取所有value
     math: # 数学
-        big:
-        complx:
+        big: # 大数
+            Float: # 大数浮点数
+            Int: # 大数整数
+                Add():
+                Div():
+                Exp():
+                Mod():
+                Mul():
+                SetString():
+                String():
+                Sub():
+            Rat: # 大数分数
+        complx: # 复数
         rand: # 随机数
             Int():
             Int31():
@@ -728,6 +754,7 @@ std:
         Chown():
         Clearenv(): # 清空环境变量
         Create(): # 创建文件File
+        CreateTemp(): # 创建临时文件
         Environ(): # 获取所有环境变量
         Executable(): # 获取可执行文件路径
         Exit(): # 进程结束
@@ -743,8 +770,8 @@ std:
         Mkdir(): # 创建单个目录
         MkdirAll():
         Open(): # 打开文件 os.File
-        OpenFile():
-        ReadDir(): # 获取所有文件条目 os.DirEntry
+        OpenFile(): # 打开文件
+        ReadDir(): # 获取所有文件条目 os.DirEntry（目录遍历）
         ReadFile(): # 获取文件内容 byte[]
         Remove(): # 删除文件
         RemoveAll(): # 删除所有文件
@@ -758,7 +785,7 @@ std:
             Base(): # 获取文件名
             Dir(): # 获取目录名
             Ext(): # 获取文件后缀
-            IsAbs(): # 是否绝对亮晶晶
+            IsAbs(): # 是否绝对路径
             Join(): # 路径合并
             WalkDir(): # 文件遍历（深度遍历）
     plugin:
@@ -874,6 +901,8 @@ std:
         Sort(): # 排序
         Strings(): # 字符串切片排序
     strconv: # 字符串转换
+        FormatFloat(): # 浮点数字符串
+        FormatInt(): # 整数字符串
         Itoa():
         ParseFloat(): # 转换浮点型数据
     strings: # 字符串
@@ -998,7 +1027,7 @@ std:
             DecodeRuneInString():
             RuneCountInString():
     unique:
-    unsafe: # 不安全操作，底层操作
+    unsafe: # 底层数据操作（不安全操作）
         Sizeof(): # 获取变量内存大小
     weak:
 ```
@@ -1009,17 +1038,17 @@ std:
 ### Data Types
 ```yaml
 types:
-    bool: # 布尔 true|false
+    bool: # 布尔 true|false,默认值false
     byte: # 字节（uint8）
     float32:
-    float64: # 浮点数默认
-    int:
+    float64: # 浮点数默认，默认值0 
+    int: # int32整数默认，32位，默认值0
     int8:
     int16:
     int64:
     nil: # 空类型
-    rune: # 多字节字符
-    string: # 字符串
+    rune: # 多字节字符 int32
+    string: # 字符串（字符串为基础数据类型，值拷贝），默认值""
     uint8:
     uint64:
     ---
@@ -1261,6 +1290,11 @@ Control Flow:
     switch ... case ... default ...:
         fallthrough: # 默认不穿透
 ```
+
+#### Type Convert
+
+数据类型转换`T(v)`
+golang不存在隐式类型转换
 
 
 #### Exception Handler
