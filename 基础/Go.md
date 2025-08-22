@@ -1,8 +1,8 @@
 # Go
 
 `go官方文档：https://golang.google.cn/doc/`
-`Go by Example文档：https://gobyexample.com/for`
-`2万多买的Go语言（golang）教程全套：P43`
+`Go by Example文档：https://gobyexample.com/arrays`
+`2万多买的Go语言（golang）教程全套：P57`
 
 
 ## 基础介绍
@@ -74,6 +74,8 @@ mingw安装：`https://sourceforge.net/projects/mingw/`
 go:
     benchmark:
     build: # 构建
+        -buildmode:
+        -ldflags:
         -o:
         -tags:
     clean:
@@ -964,7 +966,12 @@ std:
             Wait(): # 等待归0
         NewCond(): # 新建条件变量，传入锁
     syscall: # 系统调用
-        js:
+        js: # wasm模块
+            Value:
+                Int():
+            FuncOf():
+            Global():
+                Set():
         O_RDONLY:
         SIGINT:
         SIGKILL:
@@ -1000,16 +1007,20 @@ std:
         Millisecond: # 毫秒
         Month:
         Second: # 秒
+        Saturday:
+        Sunday:
         Time: # 时间
             Add():
             After():
             Before():
             Equal():
             Format(): # 时间字符串格式化 2006-01-02 15:04:05
+            Hour(): # 小时
             String(): # 
             Sub():
             Unix(): # 时间戳 秒
             UnixMilli(): # 时间戳 毫秒
+            Weekday():
             Year():
         After(): # 延时执行 channel
         AfterFunc(): # 延迟执行
@@ -1031,6 +1042,11 @@ std:
     unsafe: # 底层数据操作（不安全操作）
         Sizeof(): # 获取变量内存大小
     weak:
+
+C: # CGO 模块
+golang.org/x: # 官方维护扩展库
+    sys:
+        windows:
 ```
 
 
