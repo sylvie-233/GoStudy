@@ -1,7 +1,7 @@
 # Go
 
 `go官方文档：https://golang.google.cn/doc/`
-`Go by Example文档：https://gobyexample.com/arrays`
+`Go by Example文档：https://gobyexample.com/functions`
 `2万多买的Go语言（golang）教程全套：P57`
 
 
@@ -538,7 +538,7 @@ std:
     maps: # 映射工具包
         Clone(): # 拷贝
         Delete(): # 删除key
-        Equal(): # 内部元素相等判断
+        Equal(): # 内部元素相等判断（循环遍历）
         Keys(): # 获取所有key
         Merge(): # 合并map
         Map(): # 映射转换
@@ -872,11 +872,11 @@ std:
         NumCPU():
     signal: # 信号
         Notify(): # 通道设置信号监听（配合chan）
-    slices: # 切片
+    slices: # 切片工具
         Clone():
         Contains(): # 值包含判断
         Copy(): # 切片拷贝
-        Equal(): # 切片内部值比较
+        Equal(): # 切片内部值比较（循环判断）
         Filter(): # 序列过滤
         Index(): # 查找元素索引
         IndexAny():
