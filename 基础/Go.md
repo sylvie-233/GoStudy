@@ -12,12 +12,11 @@
 
 
 
-
-`GOPROXY`: 模块代理
-`GOMODCACHE`: 第三方模块安装
-
-`GOPATH`: go模块搜索路径
-`GOPATH/pkg/mod`: 存放下载的第三方包
+环境变量：
+- `GOPROXY`: 模块代理
+- `GOMODCACHE`: 第三方模块安装
+- `GOPATH`: go模块搜索路径
+- `GOPATH/pkg/mod`: 存放下载的第三方包
 
 mingw安装：`https://sourceforge.net/projects/mingw/`
 
@@ -37,6 +36,7 @@ mingw安装：`https://sourceforge.net/projects/mingw/`
 - map
 - channel
 
+- windows关闭defender能提升go运行速度(PC Manager Service)
 
 
 ### 安装目录
@@ -104,7 +104,7 @@ go:
         edit: # 编辑go.mod
             -replace:
         graph: # 查看依赖结构
-        init: # 初始化模块
+        init: # 初始化模块,生成go.mod文件
         tidy: # 清理依赖
         vendor: # 导出所有依赖到vendor目录
         verify: # 校验模块
@@ -132,6 +132,9 @@ go:
         trace:
         vet:
     version: # go版本
+    work:
+        init: # 工作空间，生成go.work
+        use: # 使用子模块
 ```
 
 go命令行
@@ -142,8 +145,125 @@ gofmt:
     -w:
 ```
 
-
 go 代码格式化命令
+
+
+#### gopls
+```yaml
+gopls:
+    check:
+    env:
+    format:
+    doc:
+    help:
+    list:
+    version:
+```
+
+Go 官方语言服务器（Go Language Server Protocol，LSP）
+- 提供 代码补全、跳转、重构、诊断 等 IDE 功能
+- 主要用于 VS Code、Neovim、GoLand 等编辑器的后台服务
+
+IDE 启动了 gopls 进程作为本地子进程
+- JSON-RPC 是 LSP 的标准通信协议
+- gopls 内部维护 缓存 + AST + 类型信息
+- CLI 调用 gopls 也是同理，只不过客户端是命令行输入/输出
+```
+编辑器（客户端）
+      |
+      | JSON-RPC (stdin/stdout)
+      v
+gopls（语言服务器）
+      |
+      | 解析 Go 模块、AST、类型信息
+      v
+返回结果 -> 客户端渲染
+```
+
+
+
+#### gotests
+```yaml
+gotests:
+    -all:
+    -only:
+    -w:
+```
+
+自动为 Go 代码生成测试模板
+- 支持为函数、方法、接口生成测试函数
+- 可选择生成 table-driven 测试模板
+
+
+#### impl
+
+接口实现跳转命令工具
+
+
+#### goplay
+```yaml
+goplay:
+    post: # 上传到 Playground，会返回一个 Playground URL，方便分享
+    run:
+```
+
+快速运行单文件 Go 代码
+- 支持 Go Playground API
+- 适合测试小段代码或演示示例
+
+#### dlv
+```yaml
+dlv:
+    exec:
+    debug: # 调试程序
+        args: # 函数参数
+        break: # 
+        bp: # 查看所有断点
+        cond: # 条件断点
+        continue:
+        frame:
+        goroutine: # 切换协程
+        goroutines: # 查看所有协程
+        locals: # 本地变量
+        next:
+        print:
+        quit: # 退出
+        restart:
+        run: # 运行
+        step:
+        stepout:
+        stack:
+        vars: # 全局变量
+        watch:
+        whatis:
+```
+
+golang调试工具
+
+
+#### staticcheck
+```yaml
+staticcheck:
+    --version:
+```
+
+静态分析 Go 代码，发现：
+- 潜在 bug
+- 无用代码（dead code）
+- 风格问题
+- 性能问题
+
+gopls 自带一个选项可以 启用 staticcheck 检查
+- gopls 自己有基础诊断（语法和类型）
+- 启用 staticcheck 后，会叠加更严格的规则
+```
+[编辑器/IDE] ← JSON-RPC → [gopls]
+                     |
+                     |-- 调用 staticcheck (可选)
+                     v
+               [诊断结果 / 问题提示]
+```
+
 
 
 
@@ -157,6 +277,17 @@ go.mod:
 ```
 
 模块配置文件
+
+
+#### go.work
+```yaml
+go.work:
+    go:
+    use: # 使用子模块
+```
+
+
+workspace多模块管理
 
 
 
@@ -214,7 +345,7 @@ std:
         rune: # int32字符
         slice:
         string:
-        append(): # slice追加元素
+        append(): # slice追加元素（append一个空切片会自动make）
         cap(): # 数组容量
         close(): # 关闭chan
         copy(): # 值拷贝、切片拷贝
@@ -525,16 +656,20 @@ std:
             Panic():
             Print():
         Fatal():
+        Fatalln(): # 错误打印并退出
         Flags(): # 日志配置
         New(): # 新建日志器
         Panic():
+        Panicln(): # 错误打印并抛出异常
         Prefix(): # 日志信息前缀
         Print():
         Printf():
         Println():
-        SetFlags():
+        SetFlags(): # 设置日志标志
+            Ldate:
+            Ltime:
         SetOutput(): # 设置日志输出
-        SetPrefix():
+        SetPrefix(): # 设置日志前缀
     maps: # 映射工具包
         Clone(): # 拷贝
         Delete(): # 删除key
@@ -908,13 +1043,14 @@ std:
         FormatInt(): # 整数字符串
         Itoa():
         ParseFloat(): # 转换浮点型数据
-    strings: # 字符串
+    strings: # 字符串工具类
         Builder:
             String():
             Write(): # 写入
         Reader: # 字符输入流
         NewReader(): # 生成Reader
         Contains(): # 字符串包含
+        Field(): # 空白符切分
         HasPrefix():
         HasSuffix():
         Index(): # 字符串索引
