@@ -19,13 +19,14 @@ api项目:
     /etc: # 配置
         xxx-api.yaml:
     /internal: # 
-        /config:
+        /config: # 配置
             config.go: # 配置，持有xxx-api.yaml配置
-        /handler:
+        /handler: # 路由函数
             xxxhandler.go: # 处理函数定义，仅进行参数绑定、上下文传递
-        /logic:
+            route.go:
+        /logic: # 服务业务
             xxxlogic.go: # 生产的service方法，实际路由逻辑处理函数
-        /svc:
+        /svc: # 上下文
             servicecontext.go: # 上下文，持有配置RestConf
         /typs:
             types.go: # 生成的消息结构体

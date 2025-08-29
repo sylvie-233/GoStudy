@@ -1,7 +1,7 @@
 # Go
 
 `go官方文档：https://golang.google.cn/doc/`
-`Go by Example文档：https://gobyexample.com/functions`
+`Go by Example文档：https://gobyexample.com/structs`
 `2万多买的Go语言（golang）教程全套：P57`
 
 
@@ -1172,8 +1172,8 @@ std:
         Unix():
     unicode:
         utf8:
-            DecodeRuneInString():
-            RuneCountInString():
+            DecodeRuneInString(): # 解码一个rune字符出来
+            RuneCountInString(): # 按rune统计计数（默认按字节）
     unique:
     unsafe: # 底层数据操作（不安全操作）
         Sizeof(): # 获取变量内存大小
