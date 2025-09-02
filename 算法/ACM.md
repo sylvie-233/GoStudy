@@ -19,9 +19,17 @@ import (
 )
 
 var (
+	sc  = bufio.NewScanner(os.Stdin)
 	in  = bufio.NewReader(os.Stdin)
 	out = bufio.NewWriter(os.Stdout)
 )
+
+func nextInt() int {
+	sc.Scan()
+	var x int
+	fmt.Sscan(sc.Text(), &x)
+	return x
+}
 
 func readString() string {
 	line, _ := in.ReadString('\n')
@@ -99,6 +107,20 @@ func main() {
 }
 ```
 
+### 快速幂
+```go
+func pow(a, b int64) int64 {
+    res := int64(1)
+    for b > 0 {
+        if b&1 == 1 { // 当前位为1
+            res *= a
+        }
+        a *= a        // a = a^2
+        b >>= 1       // b = b/2
+    }
+    return res
+}
+```
 
 
 
@@ -191,8 +213,40 @@ func main() {
 
 
 #### DFS
+```go
+var visited []bool
+
+func dfs(u int) {
+    visited[u] = true
+    for _, v := range g[u] {
+        if !visited[v] {
+            dfs(v)
+        }
+    }
+}
+```
 
 #### BFS
+```go
+import "container/list"
+
+func bfs(start int) {
+    visited := make([]bool, len(g))
+    q := list.New()
+    q.PushBack(start)
+    visited[start] = true
+
+    for q.Len() > 0 {
+        u := q.Remove(q.Front()).(int)
+        for _, v := range g[u] {
+            if !visited[v] {
+                visited[v] = true
+                q.PushBack(v)
+            }
+        }
+    }
+}
+```
 
 
 ### 贪心
@@ -978,6 +1032,12 @@ func main() {
 ### Manacher
 
 
+### AC自动机
+
+### 后缀数组
+### 后缀自动机
+
+
 
 ## 动态规划
 
@@ -1008,12 +1068,9 @@ func main() {
 ## 图论
 
 
-### 图
+### 图的表示
 
-
-#### 图的存储
-
-##### 邻接矩阵
+#### 邻接矩阵
 ```go
 const INF = 1e9
 var n int
@@ -1036,7 +1093,7 @@ g[v][u] = w // 无向图
 ```
 
 
-##### 邻接表
+#### 邻接表
 ```go
 // 存边
 type Edge struct {
@@ -1064,11 +1121,70 @@ g[v] = append(g[v], u) // 无向图
 Adjacency List
 
 
-##### 边集
+#### 边集
+
+### 拓扑排序
+
+#### Kahn
+```go
+```
+
+入度队列法
+
+
+### 最短路
+
+#### Dijkstra
+#### SPFA
+#### Bellman-Ford
+#### Floyd-Warshall
+
+
+### 最小生成树
+
+
+#### Kruskal
+
+#### Prim
+
+### 强连通分量
+
+#### Tarjan
+#### Kosaraju
+
+### 二分图
+
+- 最大匹配
+- 最小点覆盖
+- 最大独立集
 
 
 
-### 树
+
+
+### 欧拉回路
+
+
+
+### 网络流
+
+#### Ford-Fulkerson
+#### Edmonds-Karp
+#### Dinic
+
+
+
+### 树的性质
+
+#### 树的直径
+#### 树的重心
+
+
+### LCA
+
+
+### 树链剖分
+
 
 
 
@@ -1078,31 +1194,137 @@ Adjacency List
 
 ### 数论
 
-#### 快速幂
+
+#### 最大公约数
+
+##### 拓展欧几里得
+
+
+
+#### 质因数分解
+
+#### 素数筛
+
+#### 逆元
+#### 莫比乌斯函数
+#### 欧拉函数
+
+
+### 组合数学
+
+
+
+#### 组合数
+
+二项式系数
+
+#### 容斥定理
+#### 鸽巢原理
+
+
+### 线性代数
+
+#### 矩阵快速幂
+
+#### 高斯消元
+
+### 高等数学
+
+#### 生成函数
+
+#### FFT
 ```go
-func pow(a, b int64) int64 {
-    res := int64(1)
-    for b > 0 {
-        if b&1 == 1 { // 当前位为1
-            res *= a
-        }
-        a *= a        // a = a^2
-        b >>= 1       // b = b/2
-    }
-    return res
+func fft(a []complex128, invert bool) {
+	n := len(a)
+	// 位逆序
+	for i, j := 1, 0; i < n; i++ {
+		bit := n >> 1
+		for ; j&bit != 0; bit >>= 1 {
+			j ^= bit
+		}
+		j ^= bit
+		if i < j {
+			a[i], a[j] = a[j], a[i]
+		}
+	}
+	for len_ := 2; len_ <= n; len_ <<= 1 {
+		ang := 2 * math.Pi / float64(len_)
+		if invert {
+			ang = -ang
+		}
+		wlen := complex(math.Cos(ang), math.Sin(ang))
+		for i := 0; i < n; i += len_ {
+			w := complex(1, 0)
+			half := len_ >> 1
+			for j := 0; j < half; j++ {
+				u := a[i+j]
+				v := a[i+j+half] * w
+				a[i+j] = u + v
+				a[i+j+half] = u - v
+				w *= wlen
+			}
+		}
+	}
+	if invert {
+		inv := 1.0 / float64(n)
+		for i := 0; i < n; i++ {
+			a[i] *= complex(inv, 0)
+		}
+	}
+}
+
+func convolutionInt64(f, g []int64) []int64 {
+	// 输入非负整型频率，输出整数卷积
+	n := 1
+	need := len(f) + len(g) - 1
+	for n < need {
+		n <<= 1
+	}
+	A := make([]complex128, n)
+	B := make([]complex128, n)
+	for i := range f {
+		A[i] = complex(float64(f[i]), 0)
+	}
+	for i := range g {
+		B[i] = complex(float64(g[i]), 0)
+	}
+	fft(A, false)
+	fft(B, false)
+	for i := 0; i < n; i++ {
+		A[i] *= B[i]
+	}
+	fft(A, true)
+	res := make([]int64, need)
+	for i := 0; i < need; i++ {
+		// 四舍五入
+		val := math.Round(real(A[i]))
+		if val < 0 {
+			val = 0 // 保险，理论上不会 <0
+		}
+		res[i] = int64(val)
+	}
+	return res
 }
 ```
 
+多项式系数卷积计算优化(n^2 -> nlogn)
+
+通常用于 二维循环计算 转为 值域的频次数组求和(一维)
+
+
+#### NTT
 
 
 
-### 离散数学
+### 概率论
 
+期望
 
-
-
-### 博弈论
+### 博弈论 
 
 
 
 ### 计算几何
+
+#### 圆
+#### 凸包

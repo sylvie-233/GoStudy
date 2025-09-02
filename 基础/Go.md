@@ -1,8 +1,8 @@
 # Go
 
 `go官方文档：https://golang.google.cn/doc/`
-`Go by Example文档：https://gobyexample.com/string-formatting`
-`2万多买的Go语言（golang）教程全套：P86`
+`Go by Example文档：https://gobyexample.com/text-templates`
+`2万多买的Go语言（golang）教程全套：P93`
 
 
 ## 基础介绍
@@ -474,9 +474,10 @@ std:
                 Front():
                 InsertAfter():
                 InsertBefore():
-                Len():
+                Len(): # 链表长度
+                PushBack():
                 Remove():
-            New():
+            New(): # 新建List
         ring: # 环形链表
     context: # 上下文管理
         Context:
@@ -605,15 +606,16 @@ std:
             %b: # 二进制
             %c: # 字符
             %d: # 十进制数字
-            %e: # 科学计数法
+            %e: # 科学计数法e
             %f: # 浮点数
             %q: # 带双引号的value值
             %s: # 字符串
             %t: # 布尔字面量
             %v: # 输出值
-                %+v: # 结构体输出字段
-                %#v: # 结构体带包名输出字段
+                %+v: # 输出字段名
+                %#v: # 结构体带包名、结构体名、输出字段名
             %x: # 十六进制
+            %E: # 科学计数法E
             %T: # 数据类型
                 width.precision: # 宽度.精度
                 -: # 左对齐
@@ -1196,7 +1198,7 @@ std:
         scanner:
         template: # 内置模板引擎 
             Template:
-                Execute(): # 模板上下文数据传递
+                Execute(): # 模板上下文数据传递，返回模板执行结果
                 Parse(): # 模板解析
                 ParseFiles():
             New():
