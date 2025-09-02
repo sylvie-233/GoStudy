@@ -12,7 +12,7 @@ sql查询构造器
 
 ## 核心内容
 ```yaml
-sqlx:
+github.com/jmoiron/sqlx:
     _tag:
         db: # 字段映射
     Conn:
@@ -20,8 +20,9 @@ sqlx:
         Beginx(): # 开启事务
         Close():
         Get(): # 执行单条查询sql
+        MustExec():
         NamedQuery(): # 结构体参数执行query
-        NamedExec(): # 结构体参数执行exec
+        NamedExec(): # 结构体参数执行exec（命名参数）
         Ping():
         Select(): # 执行多条查询
     NamedStmt:

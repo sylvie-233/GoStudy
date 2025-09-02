@@ -103,10 +103,96 @@ func main() {
 
 
 ### 大数运算
+```go
+// 内置大数运算
+type BigInt struct {
+	value *big.Int
+}
+
+// NewBigInt 从 int64 或字符串初始化
+func NewBigInt(val interface{}) *BigInt {
+	b := &BigInt{value: big.NewInt(0)}
+	switch v := val.(type) {
+	case int:
+		b.value.SetInt64(int64(v))
+	case int64:
+		b.value.SetInt64(v)
+	case string:
+		b.value.SetString(v, 10) // 默认十进制
+	case *big.Int:
+		b.value.Set(v)
+	default:
+		panic("unsupported type")
+	}
+	return b
+}
+
+// 加法
+func (a *BigInt) Add(b *BigInt) *BigInt {
+	return &BigInt{value: new(big.Int).Add(a.value, b.value)}
+}
+
+// 减法
+func (a *BigInt) Sub(b *BigInt) *BigInt {
+	return &BigInt{value: new(big.Int).Sub(a.value, b.value)}
+}
+
+// 乘法
+func (a *BigInt) Mul(b *BigInt) *BigInt {
+	return &BigInt{value: new(big.Int).Mul(a.value, b.value)}
+}
+
+// 除法（整除）
+func (a *BigInt) Div(b *BigInt) *BigInt {
+	return &BigInt{value: new(big.Int).Div(a.value, b.value)}
+}
+
+// 取模
+func (a *BigInt) Mod(b *BigInt) *BigInt {
+	return &BigInt{value: new(big.Int).Mod(a.value, b.value)}
+}
+
+// 幂运算 (a^n)
+func (a *BigInt) Pow(n int64) *BigInt {
+	return &BigInt{value: new(big.Int).Exp(a.value, big.NewInt(n), nil)}
+}
+
+// 比较
+func (a *BigInt) Cmp(b *BigInt) int {
+	return a.value.Cmp(b.value) // -1:小于, 0:等于, 1:大于
+}
+
+// 转字符串
+func (a *BigInt) String() string {
+	return a.value.String()
+}
+
+func main() {
+	a := NewBigInt("123456789012345678901234567890")
+	b := NewBigInt(987654321)
+
+	sum := a.Add(b)
+	diff := a.Sub(b)
+	prod := a.Mul(b)
+	quot := a.Div(NewBigInt(10))
+	power := b.Pow(5)
+
+	fmt.Println("a + b =", sum)
+	fmt.Println("a - b =", diff)
+	fmt.Println("a * b =", prod)
+	fmt.Println("a / 10 =", quot)
+	fmt.Println("b^5 =", power)
+}
+```
 
 ### 排序
 
 ### 搜索
+
+
+#### DFS
+
+#### BFS
 
 
 ### 贪心
@@ -168,6 +254,8 @@ func upperBound(nums []int, target int) int {
 }
 ```
 
+
+### 分治
 
 
 ### 前缀和
@@ -250,6 +338,138 @@ func main() {
 
 
 ### 分块
+
+Sqrt Decomposition，块状数组
+
+
+#### 单点修改 & 区间求和
+```go
+package main
+
+import (
+	"fmt"
+	"math"
+)
+
+type SqrtDecomp struct {
+	n     int     // 数组长度
+	block int     // 块大小
+	num   int     // 块数量
+	arr   []int   // 原数组 (0~n-1)
+	sum   []int   // 每个块的和（可换成 max/min）
+}
+
+func NewSqrtDecomp(arr []int) *SqrtDecomp {
+	n := len(arr)
+	block := int(math.Sqrt(float64(n)))
+	if block == 0 {
+		block = 1
+	}
+	// 保证块数 > 0
+	num := (n + block - 1) / block
+	sum := make([]int, num)
+
+	for i := 0; i < n; i++ {
+		sum[i/block] += arr[i]
+	}
+
+	return &SqrtDecomp{
+		n:     n,
+		block: block,
+		num:   num,
+		arr:   arr,
+		sum:   sum,
+	}
+}
+
+// 单点修改：arr[idx] = val
+func (s *SqrtDecomp) Update(idx, val int) {
+	// 计算块位置
+	b := idx / s.block
+	s.sum[b] += val - s.arr[idx]
+	s.arr[idx] = val
+}
+
+// 区间求和
+func (s *SqrtDecomp) Query(l, r int) int {
+	res := 0
+	for l <= r {
+		// 如果 l 在块头且整个块在 [l,r] 内，直接用块的 sum
+		if l%s.block == 0 && l+s.block-1 <= r {
+			res += s.sum[l/s.block]
+			l += s.block
+		} else {
+			res += s.arr[l]
+			l++
+		}
+	}
+	return res
+}
+```
+
+
+#### 区间加法 + 区间求和
+```go
+type LazySqrt struct {
+	n     int
+	block int
+	num   int
+	arr   []int
+	sum   []int
+	lazy  []int // 懒加载数组优化
+}
+
+func NewLazySqrt(arr []int) *LazySqrt {
+	n := len(arr)
+	block := int(math.Sqrt(float64(n)))
+	if block == 0 {
+		block = 1
+	}
+	num := (n + block - 1) / block
+	sum := make([]int, num)
+	lazy := make([]int, num)
+
+	for i := 0; i < n; i++ {
+		sum[i/block] += arr[i]
+	}
+
+	return &LazySqrt{n, block, num, arr, sum, lazy}
+}
+
+// 区间加
+func (s *LazySqrt) Add(l, r, val int) {
+	for i := l; i <= r; {
+		if i%s.block == 0 && i+s.block-1 <= r {
+			b := i / s.block
+			s.lazy[b] += val
+			s.sum[b] += val * s.block
+			i += s.block
+		} else {
+			b := i / s.block
+			s.arr[i] += val
+			s.sum[b] += val
+			i++
+		}
+	}
+}
+
+// 区间和
+func (s *LazySqrt) Query(l, r int) int {
+	res := 0
+	for i := l; i <= r; {
+		if i%s.block == 0 && i+s.block-1 <= r {
+			b := i / s.block
+			res += s.sum[b]
+			i += s.block
+		} else {
+			b := i / s.block
+			res += s.arr[i] + s.lazy[b]
+			i++
+		}
+	}
+	return res
+}
+```
 
 
 
@@ -844,7 +1064,7 @@ g[v] = append(g[v], u) // 无向图
 Adjacency List
 
 
-##### 
+##### 边集
 
 
 

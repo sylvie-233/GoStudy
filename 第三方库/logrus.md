@@ -20,13 +20,13 @@ logrus:
         Message: # 日志内容
         Time:
         String():
-    Fields:
+    Fields: # 日志字段
     Formatter:
         Format:
     Hook:
         Levels(): # Hook绑定的日志级别
         Fire():
-    JSONFormatter:
+    JSONFormatter: # json日志格式化器
         Format():
     TextFormatter:
     WarningLevel:

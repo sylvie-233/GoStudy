@@ -1,8 +1,8 @@
 # Go
 
 `go官方文档：https://golang.google.cn/doc/`
-`Go by Example文档：https://gobyexample.com/structs`
-`2万多买的Go语言（golang）教程全套：P57`
+`Go by Example文档：https://gobyexample.com/string-formatting`
+`2万多买的Go语言（golang）教程全套：P86`
 
 
 ## 基础介绍
@@ -37,6 +37,62 @@ mingw安装：`https://sourceforge.net/projects/mingw/`
 - channel
 
 - windows关闭defender能提升go运行速度(PC Manager Service)
+
+
+
+Golang微服务生态：
+- 注册中心 & 配置中心：
+    - Etcd：
+    - Consul：
+    - Nacos：
+- API网关：
+    - APISIX：
+- Web框架：
+    - Gin：
+    - Go-Zero：
+- 配置文件：
+    - Viper：
+- API文档：
+    - Swagger
+- 文件模板：
+    - Excelize：
+- ORM：
+    - GORM：
+    - sqlx：
+- RPC调用：
+    - Resty：
+    - gRPC：
+- 认证授权：
+    - Jwt：
+    - OAuth2：
+- 熔断限流：
+    - Sentinel
+- 分布式事务：
+    - Seata：
+- 日志：
+    - Zap：
+    - Loki：
+- 指标：
+    - Prometheus：
+    - Grafana：
+- 链路追踪：
+    - OpenTelemetry：
+    - Jaeger：
+- 数据库：
+    - MySQL
+    - PostgreSQL
+    - MongoDB
+- 缓存：
+    - Redis：
+- 搜索引擎：
+    - ElasticSearch
+- 消息队列：
+    - RabbitMQ
+- 文件系统：
+    - MinIO
+- 容器：
+    - Docker
+    - Kubernetes
 
 
 ### 安装目录
@@ -400,7 +456,9 @@ std:
         ToUpper():
         Trim():
         TrimFunc():
-    cmp:
+    cmp: # 排序比较接口（常配合slices.Sort()使用）
+        Ordered: # 
+        Compare(): # 值比较 -1、0、1
     compress: # 压缩
         bzip2:
         gzip:
@@ -516,6 +574,7 @@ std:
     errors: # 异常
         error: # 异常基类
             Error():
+        As(): # 异常类型判断 并转换
         Is(): # 异常类型判断
         New(): # 新建错误
     expvar:
@@ -649,7 +708,8 @@ std:
         ReadFull():
         WriteString(): # 写入字符串
             length:
-    iter:
+    iter: # 迭代器 yeild支持
+        Seq:
     log: # 日志
         Logger: # 日志器
             Fatal():
@@ -1009,6 +1069,7 @@ std:
         Notify(): # 通道设置信号监听（配合chan）
     slices: # 切片工具
         Clone():
+        Collect(): # 迭代器值收集
         Contains(): # 值包含判断
         Copy(): # 切片拷贝
         Equal(): # 切片内部值比较（循环判断）
@@ -1016,11 +1077,12 @@ std:
         Index(): # 查找元素索引
         IndexAny():
         IndexFunc():
+        IsSorted(): # 判断切片是否有序
         Map(): # 序列转换
         Remove(): # 删除元素索引
         Replace(): # 替换元素
         Reverse():
-        Sort(): # 排序
+        Sort(): # 排序（最常用的切片排序）
         SortFunc(): # 自定义排序
         Unique(): # 序列去重
     sort: # 排序
@@ -1068,6 +1130,9 @@ std:
     structs:
     sync: # 同步
         atomic: # 原子操作
+            Uint64:
+                Add():
+                Load():
             AddInt64():
             CompareAndSwapInt64():
             LoadInt64():
@@ -1099,6 +1164,7 @@ std:
         WaitGroup: # 等待计数
             Add(): # 计数+1，开启协程时+1
             Done(): # 计数-1，协程结束时-1
+            Go(): # 运行函数，计数+1（运行结束自动-1）
             Wait(): # 等待归0
         NewCond(): # 新建条件变量，传入锁
     syscall: # 系统调用
@@ -1145,6 +1211,9 @@ std:
         Second: # 秒
         Saturday:
         Sunday:
+        Ticker: # 定时器
+            C: # channel
+            Stop():
         Time: # 时间
             Add():
             After():
@@ -1158,6 +1227,9 @@ std:
             UnixMilli(): # 时间戳 毫秒
             Weekday():
             Year():
+        Timer: # 延时器
+            C: # channel
+            Stop():
         After(): # 延时执行 channel
         AfterFunc(): # 延迟执行
         LoadLocation(): # 
@@ -1168,7 +1240,7 @@ std:
         ParseInLocation():
         Since(): # 计算duration
         Sleep(): # 线程睡眠
-        Tick(): # 定时器执行 channel
+        Tick(): # 定时器执行 channel（常配合range使用）
         Unix():
     unicode:
         utf8:
