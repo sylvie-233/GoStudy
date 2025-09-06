@@ -1,8 +1,8 @@
 # Go
 
 `go官方文档：https://golang.google.cn/doc/`
-`Go by Example文档：https://gobyexample.com/text-templates`
-`2万多买的Go语言（golang）教程全套：P93`
+`Go by Example文档：https://gobyexample.com/regular-expressions`
+``
 
 
 ## 基础介绍
@@ -881,7 +881,7 @@ std:
             RemoteAddr(): # 远程地址
             Write(): # 写入字节数据
         Listener:
-            Accept(): # 接收socket连接
+            Accept(): # 接收socket连接 net.Conn
             Close(): # 关闭连接
         UDPAddr:
             IP:
@@ -893,7 +893,7 @@ std:
             WriteToUDP():
         Dial(): # TCP请求连接，net.Conn
         DialUDP(): # UDP请求连接
-        Listen(): # 端口监听
+        Listen(): # 端口监听, net.Listener
         ListenTCP(): # TCP端口监听
         ListenUDP(): # 端口监听
         ResolveTCPAddr():
@@ -993,6 +993,7 @@ std:
         rtype:
         Float32:
         Int32:
+        Kind:
         Method: # 字段方法
             Name:
             Type: # 方法名
@@ -1196,11 +1197,12 @@ std:
             Skip(): # 跳过测试
     text: # 文本处理
         scanner:
-        template: # 内置模板引擎 
+        template: # 内置文本模板引擎 
             Template:
                 Execute(): # 模板上下文数据传递，返回模板执行结果
                 Parse(): # 模板解析
                 ParseFiles():
+            Must(): # panic 如果 模板parse解析错误
             New():
         tabwriter:
             parse():
@@ -1455,6 +1457,7 @@ default:
 go通道：`chan T`、引用传递
 
 go协程通信、通道默认无缓存
+单向通道仅用于双向通道缩小范围
 
 for...range.. 遍历channel
 select 多路复用channel
@@ -1522,6 +1525,11 @@ Control Flow:
 
 数据类型转换`T(v)`
 golang不存在隐式类型转换
+
+
+#### Type Switch
+
+类型多分支判断
 
 
 #### Exception Handler
@@ -1636,7 +1644,7 @@ func divide(a, b float64) (quotient float64, err error) {
 #### Defer
 
 延迟执行函数、栈结构调用
-return执行之前
+return执行之前（不是在代码块结束前执行）
 
 
 
@@ -1764,9 +1772,12 @@ type Stringer[T any] interface {
 
 #### Reflect
 
-反射、Type、Value
+反射：Type、Value
 - Type:  Go 变量的类型
 - Value: Go 变量的值
+
+反射操作核心：StructField、Method
+
 
 reflect.Value必须是指针(pointer)，否则无法修改变量，需要调用Elem()取值后修改
 reflect.TypeOf(p) 获取的是 *Person 类型，通过 Elem() 获取的是 Person 类型
